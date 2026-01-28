@@ -23,6 +23,12 @@ const COLORS = [
   '#06b6d4', // cyan-500
 ];
 
+const STATUS_COLORS: Record<string, string> = {
+  Inativo: '#ef4444', // red-500
+  Ativo: '#22c55e', // green-500
+  Concluido: '#3b82f6', // blue-500
+};
+
 export function PieChart({ data, isLoading }: PieChartProps) {
   if (isLoading) {
     return (
@@ -71,10 +77,10 @@ export function PieChart({ data, isLoading }: PieChartProps) {
               strokeWidth={3}
               stroke="hsl(var(--card))"
             >
-              {data?.map((_entry, index) => (
+              {data?.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
-                  fill={COLORS[index % COLORS.length]}
+                  fill={STATUS_COLORS[entry.label] || COLORS[index % COLORS.length]}
                   stroke="hsl(var(--background))"
                 />
               ))}
