@@ -60,6 +60,29 @@ export function BarChart({ data, isLoading }: BarChartProps) {
               tickLine={false}
               axisLine={false}
               dy={10}
+              interval={0}
+              height={70}
+              tick={(props) => {
+                const { x, y, payload } = props;
+                return (
+                  <g transform={`translate(${x},${y})`}>
+                    <text 
+                      x={0} 
+                      y={0} 
+                      dy={16} 
+                      textAnchor="middle" 
+                      fill="#888888"
+                      fontSize={11}
+                    >
+                      {payload.value && payload.value.split(' ').map((word: string, index: number) => (
+                        <tspan key={index} x={0} dy={index === 0 ? 0 : 12}>
+                          {word}
+                        </tspan>
+                      ))}
+                    </text>
+                  </g>
+                );
+              }}
             />
             <YAxis
               stroke="#888888"
@@ -78,9 +101,17 @@ export function BarChart({ data, isLoading }: BarChartProps) {
                 padding: '12px',
               }}
               labelStyle={{ color: 'hsl(var(--foreground))', fontWeight: '600', marginBottom: '4px' }}
-              itemStyle={{ color: 'hsl(var(--foreground))', fontSize: '14px' }}
+              itemStyle={{ color: 'hsl(var(--primary))', fontWeight: '500', fontSize: '14px' }}
             />
-            <Legend wrapperStyle={{ paddingTop: '20px' }} iconType="circle" />
+            <Legend 
+              verticalAlign="bottom"
+              height={36}
+              iconType="circle"
+              iconSize={8}
+              wrapperStyle={{ paddingTop: '20px', paddingBottom: '10px' }}
+              itemStyle={{ display: 'inline-flex', alignItems: 'center', marginRight: '24px' }}
+              formatter={(value) => <span className="text-sm font-medium text-muted-foreground ml-2">{value}</span>}
+            />
             <Bar
               dataKey="value"
               name="Matrículas"

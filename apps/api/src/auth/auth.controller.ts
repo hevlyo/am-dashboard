@@ -8,25 +8,36 @@ import {
   UsePipes,
   HttpStatus,
   HttpCode,
-} from '@nestjs/common';
-import { Response } from 'express';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
-import { AuthService } from './auth.service';
-import { loginSchema, registerSchema, LoginInput, RegisterInput, User } from '@repo/schemas';
-import { ZodValidationPipe } from '../common/pipes/zod-validation.pipe';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
-import { CurrentUser } from '../common/decorators/current-user.decorator';
+} from "@nestjs/common";
+import type { Response } from "express";
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from "@nestjs/swagger";
+import { AuthService } from "./auth.service";
+import {
+  loginSchema,
+  registerSchema,
+  LoginInput,
+  RegisterInput,
+  User,
+} from "@repo/schemas";
+import { ZodValidationPipe } from "../common/pipes/zod-validation.pipe";
+import { JwtAuthGuard } from "./guards/jwt-auth.guard";
+import { JwtRefreshGuard } from "./guards/jwt-refresh.guard";
+import { CurrentUser } from "../common/decorators/current-user.decorator";
 
-@ApiTags('auth')
-@Controller('auth')
+@ApiTags("auth")
+@Controller("auth")
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('login')
-  @ApiOperation({ summary: 'Login do usuário' })
-  @ApiResponse({ status: 200, description: 'Login realizado com sucesso' })
-  @ApiResponse({ status: 401, description: 'Credenciais inválidas' })
+  @Post("login")
+  @ApiOperation({ summary: "Login do usuário" })
+  @ApiResponse({ status: 200, description: "Login realizado com sucesso" })
+  @ApiResponse({ status: 401, description: "Credenciais inválidas" })
   @UsePipes(new ZodValidationPipe(loginSchema))
   @HttpCode(HttpStatus.OK)
   async login(
@@ -36,21 +47,21 @@ export class AuthController {
     const { user, tokens } = await this.authService.login(body);
 
     // Set Refresh Token in HttpOnly Cookie
-    const isProduction = process.env.NODE_ENV === 'production';
-    res.cookie('refreshToken', tokens.refreshToken, {
+    const isProduction = process.env.NODE_ENV === "production";
+    res.cookie("refreshToken", tokens.refreshToken, {
       httpOnly: true,
       secure: isProduction,
-      sameSite: isProduction ? 'none' : 'strict', // 'none' required for cross-origin in production
+      sameSite: isProduction ? "none" : "strict", // 'none' required for cross-origin in production
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
     return { user, tokens };
   }
 
-  @Post('register')
-  @ApiOperation({ summary: 'Registrar novo usuário' })
-  @ApiResponse({ status: 201, description: 'Usuário criado com sucesso' })
-  @ApiResponse({ status: 409, description: 'Email já cadastrado' })
+  @Post("register")
+  @ApiOperation({ summary: "Registrar novo usuário" })
+  @ApiResponse({ status: 201, description: "Usuário criado com sucesso" })
+  @ApiResponse({ status: 409, description: "Email já cadastrado" })
   @UsePipes(new ZodValidationPipe(registerSchema))
   async register(
     @Body() body: RegisterInput,
@@ -58,21 +69,21 @@ export class AuthController {
   ) {
     const { user, tokens } = await this.authService.register(body);
 
-    const isProduction = process.env.NODE_ENV === 'production';
-    res.cookie('refreshToken', tokens.refreshToken, {
+    const isProduction = process.env.NODE_ENV === "production";
+    res.cookie("refreshToken", tokens.refreshToken, {
       httpOnly: true,
       secure: isProduction,
-      sameSite: isProduction ? 'none' : 'strict',
+      sameSite: isProduction ? "none" : "strict",
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
     return { user, tokens };
   }
 
-  @Post('refresh')
+  @Post("refresh")
   @UseGuards(JwtRefreshGuard)
-  @ApiOperation({ summary: 'Renovar Access Token usando Refresh Token' })
-  @ApiResponse({ status: 200, description: 'Token renovado com sucesso' })
+  @ApiOperation({ summary: "Renovar Access Token usando Refresh Token" })
+  @ApiResponse({ status: 200, description: "Token renovado com sucesso" })
   @HttpCode(HttpStatus.OK)
   async refresh(
     @CurrentUser() user: User,
@@ -83,29 +94,29 @@ export class AuthController {
       user.email,
     );
 
-    const isProduction = process.env.NODE_ENV === 'production';
-    res.cookie('refreshToken', tokens.refreshToken, {
+    const isProduction = process.env.NODE_ENV === "production";
+    res.cookie("refreshToken", tokens.refreshToken, {
       httpOnly: true,
       secure: isProduction,
-      sameSite: isProduction ? 'none' : 'strict',
+      sameSite: isProduction ? "none" : "strict",
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
     return { user: userData, tokens };
   }
 
-  @Post('logout')
-  @ApiOperation({ summary: 'Logout do usuário' })
+  @Post("logout")
+  @ApiOperation({ summary: "Logout do usuário" })
   @HttpCode(HttpStatus.OK)
   async logout(@Res({ passthrough: true }) res: Response) {
-    res.clearCookie('refreshToken');
-    return { message: 'Logged out successfully' };
+    res.clearCookie("refreshToken");
+    return { message: "Logged out successfully" };
   }
 
-  @Get('me')
+  @Get("me")
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth('JWT-auth')
-  @ApiOperation({ summary: 'Obter dados do usuário logado' })
+  @ApiBearerAuth("JWT-auth")
+  @ApiOperation({ summary: "Obter dados do usuário logado" })
   async me(@CurrentUser() user: User) {
     return this.authService.getProfile(user.id);
   }

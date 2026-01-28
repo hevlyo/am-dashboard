@@ -183,15 +183,10 @@ node apps/api/dist/src/main.js
 
 ---
 
-## 🚢 CI/CD
+## 🚢 CI
 
-O projeto conta com pipelines configurados no GitHub Actions:
+O projeto conta com pipeline de **CI** no GitHub Actions:
 
 - **CI**: Roda Lint, Type Check e Testes em cada Pull Request.
-- **CD**: Deploy automático para Vercel (Frontend) e Render (Backend) na branch `main`.
 
----
-
-## 📧 Contato
-
-Desenvolvido para o processo seletivo da **A Mentoria ENEM**.
+> Deploys são feitos automaticamente pelas integrações da Vercel e Render com o repositório.

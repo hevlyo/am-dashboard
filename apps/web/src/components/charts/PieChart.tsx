@@ -96,9 +96,13 @@ export function PieChart({ data, isLoading }: PieChartProps) {
               itemStyle={{ color: 'hsl(var(--foreground))', fontWeight: '500' }}
             />
             <Legend 
-              wrapperStyle={{ paddingTop: '20px' }}
-              formatter={(value) => <span className="text-sm font-medium text-muted-foreground ml-2">{value}</span>}
+              verticalAlign="bottom"
+              height={36}
               iconType="circle"
+              iconSize={8}
+              wrapperStyle={{ paddingTop: '20px', paddingBottom: '10px' }}
+              itemStyle={{ display: 'inline-flex', alignItems: 'center', marginRight: '24px' }}
+              formatter={(value) => <span className="text-sm font-medium text-muted-foreground ml-2">{value}</span>}
             />
           </RechartsPieChart>
         </ResponsiveContainer>

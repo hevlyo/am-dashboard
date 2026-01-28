@@ -79,7 +79,15 @@ export function LineChart({ data, isLoading }: LineChartProps) {
               labelStyle={{ color: 'hsl(var(--foreground))', fontWeight: '600', marginBottom: '4px' }}
               itemStyle={{ color: 'hsl(var(--primary))', fontWeight: '500' }}
             />
-            <Legend wrapperStyle={{ paddingTop: '20px' }} iconType="circle" />
+            <Legend 
+              verticalAlign="bottom"
+              height={36}
+              iconType="circle"
+              iconSize={8}
+              wrapperStyle={{ paddingTop: '20px', paddingBottom: '10px' }}
+              itemStyle={{ display: 'inline-flex', alignItems: 'center', marginRight: '24px' }}
+              formatter={(value) => <span className="text-sm font-medium text-muted-foreground ml-2">{value}</span>}
+            />
             <Line
               type="monotone"
               dataKey="value"
