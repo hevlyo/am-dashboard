@@ -5,9 +5,15 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-} from 'recharts';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import type { ChartDataPoint } from '@repo/schemas';
+} from "recharts";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import type { ChartDataPoint } from "@repo/schemas";
 
 interface PieChartProps {
   data?: ChartDataPoint[];
@@ -15,18 +21,18 @@ interface PieChartProps {
 }
 
 const COLORS = [
-  '#3b82f6', // blue-500
-  '#8b5cf6', // violet-500
-  '#10b981', // emerald-500
-  '#f59e0b', // amber-500
-  '#ec4899', // pink-500
-  '#06b6d4', // cyan-500
+  "#3b82f6", // blue-500
+  "#8b5cf6", // violet-500
+  "#10b981", // emerald-500
+  "#f59e0b", // amber-500
+  "#ec4899", // pink-500
+  "#06b6d4", // cyan-500
 ];
 
 const STATUS_COLORS: Record<string, string> = {
-  Inativo: '#ef4444', // red-500
-  Ativo: '#22c55e', // green-500
-  Concluido: '#3b82f6', // blue-500
+  Inativo: "#ef4444", // red-500
+  Ativo: "#22c55e", // green-500
+  Concluido: "#3b82f6", // blue-500
 };
 
 export function PieChart({ data, isLoading }: PieChartProps) {
@@ -48,7 +54,9 @@ export function PieChart({ data, isLoading }: PieChartProps) {
         <div className="bg-muted/50 p-4 rounded-full mb-4">
           <div className="h-8 w-8 text-muted-foreground opacity-50" />
         </div>
-        <h3 className="text-lg font-medium text-foreground">Sem dados disponíveis</h3>
+        <h3 className="text-lg font-medium text-foreground">
+          Sem dados disponíveis
+        </h3>
         <p className="text-sm text-muted-foreground max-w-xs">
           Não há dados de status para exibir.
         </p>
@@ -80,29 +88,37 @@ export function PieChart({ data, isLoading }: PieChartProps) {
               {data?.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
-                  fill={STATUS_COLORS[entry.label] || COLORS[index % COLORS.length]}
+                  fill={
+                    STATUS_COLORS[entry.label] || COLORS[index % COLORS.length]
+                  }
                   stroke="hsl(var(--background))"
                 />
               ))}
             </Pie>
             <Tooltip
               contentStyle={{
-                backgroundColor: 'hsl(var(--popover))',
-                borderColor: 'hsl(var(--border))',
-                borderRadius: 'var(--radius)',
-                boxShadow: 'var(--shadow-lg)',
-                padding: '12px',
+                backgroundColor: "hsl(var(--popover))",
+                borderColor: "hsl(var(--border))",
+                borderRadius: "var(--radius)",
+                boxShadow: "var(--shadow-lg)",
+                padding: "12px",
               }}
-              itemStyle={{ color: 'hsl(var(--foreground))', fontWeight: '500' }}
+              itemStyle={{ color: "hsl(var(--foreground))", fontWeight: "500" }}
             />
-            <Legend 
+            <Legend
               verticalAlign="bottom"
               height={36}
               iconType="circle"
               iconSize={8}
-              wrapperStyle={{ paddingTop: '20px', paddingBottom: '10px' }}
-              itemStyle={{ display: 'inline-flex', alignItems: 'center', marginRight: '24px' }}
-              formatter={(value) => <span className="text-sm font-medium text-muted-foreground ml-2">{value}</span>}
+              wrapperStyle={{ paddingTop: "20px", paddingBottom: "10px" }}
+              formatter={(value) => (
+                <span
+                  className="text-sm font-medium text-muted-foreground"
+                  style={{ marginLeft: 8, marginRight: 24 }}
+                >
+                  {value}
+                </span>
+              )}
             />
           </RechartsPieChart>
         </ResponsiveContainer>

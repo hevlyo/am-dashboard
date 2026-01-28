@@ -7,9 +7,15 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-} from 'recharts';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import type { TimeSeriesPoint } from '@repo/schemas';
+} from "recharts";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import type { TimeSeriesPoint } from "@repo/schemas";
 
 interface LineChartProps {
   data?: TimeSeriesPoint[];
@@ -35,7 +41,9 @@ export function LineChart({ data, isLoading }: LineChartProps) {
         <div className="bg-muted/50 p-4 rounded-full mb-4">
           <div className="h-8 w-8 text-muted-foreground opacity-50" />
         </div>
-        <h3 className="text-lg font-medium text-foreground">Sem dados disponíveis</h3>
+        <h3 className="text-lg font-medium text-foreground">
+          Sem dados disponíveis
+        </h3>
         <p className="text-sm text-muted-foreground max-w-xs">
           Não há histórico para exibir neste período.
         </p>
@@ -51,8 +59,16 @@ export function LineChart({ data, isLoading }: LineChartProps) {
       </CardHeader>
       <CardContent className="pl-0 pb-2">
         <ResponsiveContainer width="100%" height={300}>
-          <RechartsLineChart data={data} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} strokeOpacity={0.1} stroke="currentColor" />
+          <RechartsLineChart
+            data={data}
+            margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+          >
+            <CartesianGrid
+              strokeDasharray="3 3"
+              vertical={false}
+              strokeOpacity={0.1}
+              stroke="currentColor"
+            />
             <XAxis
               dataKey="date"
               stroke="#888888"
@@ -70,23 +86,33 @@ export function LineChart({ data, isLoading }: LineChartProps) {
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: 'hsl(var(--popover))',
-                borderColor: 'hsl(var(--border))',
-                borderRadius: 'var(--radius)',
-                boxShadow: 'var(--shadow-lg)',
-                padding: '12px',
+                backgroundColor: "hsl(var(--popover))",
+                borderColor: "hsl(var(--border))",
+                borderRadius: "var(--radius)",
+                boxShadow: "var(--shadow-lg)",
+                padding: "12px",
               }}
-              labelStyle={{ color: 'hsl(var(--foreground))', fontWeight: '600', marginBottom: '4px' }}
-              itemStyle={{ color: 'hsl(var(--primary))', fontWeight: '500' }}
+              labelStyle={{
+                color: "hsl(var(--foreground))",
+                fontWeight: "600",
+                marginBottom: "4px",
+              }}
+              itemStyle={{ color: "hsl(var(--primary))", fontWeight: "500" }}
             />
-            <Legend 
+            <Legend
               verticalAlign="bottom"
               height={36}
               iconType="circle"
               iconSize={8}
-              wrapperStyle={{ paddingTop: '20px', paddingBottom: '10px' }}
-              itemStyle={{ display: 'inline-flex', alignItems: 'center', marginRight: '24px' }}
-              formatter={(value) => <span className="text-sm font-medium text-muted-foreground ml-2">{value}</span>}
+              wrapperStyle={{ paddingTop: "20px", paddingBottom: "10px" }}
+              formatter={(value) => (
+                <span
+                  className="text-sm font-medium text-muted-foreground"
+                  style={{ marginLeft: 8, marginRight: 24 }}
+                >
+                  {value}
+                </span>
+              )}
             />
             <Line
               type="monotone"
@@ -94,8 +120,18 @@ export function LineChart({ data, isLoading }: LineChartProps) {
               name="Novas Matrículas"
               stroke="hsl(var(--primary))"
               strokeWidth={3}
-              activeDot={{ r: 8, fill: "hsl(var(--primary))", stroke: "hsl(var(--background))", strokeWidth: 2 }}
-              dot={{ r: 4, strokeWidth: 2, fill: "hsl(var(--background))", stroke: "hsl(var(--primary))" }}
+              activeDot={{
+                r: 8,
+                fill: "hsl(var(--primary))",
+                stroke: "hsl(var(--background))",
+                strokeWidth: 2,
+              }}
+              dot={{
+                r: 4,
+                strokeWidth: 2,
+                fill: "hsl(var(--background))",
+                stroke: "hsl(var(--primary))",
+              }}
             />
           </RechartsLineChart>
         </ResponsiveContainer>
