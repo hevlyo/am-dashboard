@@ -1,0 +1,25 @@
+# Render Blueprint for AM Dashboard API
+# https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: am-dashboard-api
+    runtime: node
+    region: oregon
+    plan: free
+    buildCommand: pnpm install && pnpm turbo build --filter=api && cd apps/api && npx prisma generate
+    startCommand: node apps/api/dist/src/main.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: CORS_ORIGINS
+        sync: false
+      - key: PORT
+        value: 10000
+    healthCheckPath: /api/docs

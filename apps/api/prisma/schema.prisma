@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum StudentStatus {
+  ACTIVE
+  INACTIVE
+  COMPLETED
+}
+
+enum Category {
+  REDACAO
+  LINGUAGENS
+  MATEMATICA
+  CIENCIAS_NATUREZA
+  CIENCIAS_HUMANAS
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Student {
+  id          String        @id @default(cuid())
+  name        String
+  email       String        @unique
+  status      StudentStatus @default(ACTIVE)
+  enrollments Enrollment[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@map("students")
+}
+
+model Course {
+  id          String       @id @default(cuid())
+  title       String
+  description String?
+  category    Category
+  totalLessons Int         @default(10)
+  enrollments Enrollment[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@map("courses")
+}
+
+model Enrollment {
+  id          String    @id @default(cuid())
+  student     Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId   String
+  course      Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId    String
+  progress    Float     @default(0)
+  completedAt DateTime?
+  enrolledAt  DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([studentId, courseId])
+  @@map("enrollments")
+}
