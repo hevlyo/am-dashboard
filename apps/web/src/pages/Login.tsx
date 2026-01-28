@@ -165,13 +165,13 @@ export function Login() {
                       <FormMessage />
                       {error && (
                         <motion.div
-                          initial={{ opacity: 0, height: 0, marginBottom: 0 }}
+                          initial={{ opacity: 0, height: 0, marginTop: 0 }}
                           animate={{
                             opacity: 1,
                             height: "auto",
-                            marginBottom: 16,
+                            marginTop: 16,
                           }}
-                          className="flex items-center gap-3 p-4 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/10 rounded-lg border border-red-200 dark:border-red-900/20"
+                          className="flex items-center gap-3 p-4 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/10 rounded-lg border border-red-200 dark:border-red-900/20 overflow-hidden"
                         >
                           <AlertCircle className="h-5 w-5 flex-shrink-0" />
                           <span>{error}</span>

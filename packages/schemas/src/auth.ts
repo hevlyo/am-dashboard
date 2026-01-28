@@ -1,14 +1,14 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export const loginSchema = z.object({
-  email: z.string().email('Email inválido'),
-  password: z.string().min(1, 'Senha é obrigatória'),
+  email: z.string().email("Por favor, insira um endereço de e-mail válido"),
+  password: z.string().min(1, "Senha é obrigatória"),
 });
 
 export const registerSchema = z.object({
-  name: z.string().min(2, 'Nome deve ter no mínimo 2 caracteres'),
-  email: z.string().email('Email inválido'),
-  password: z.string().min(6, 'Senha deve ter no mínimo 6 caracteres'),
+  name: z.string().min(2, "Nome deve ter no mínimo 2 caracteres"),
+  email: z.string().email("Por favor, insira um endereço de e-mail válido"),
+  password: z.string().min(6, "Senha deve ter no mínimo 6 caracteres"),
 });
 
 export const tokensSchema = z.object({
@@ -20,7 +20,7 @@ export const userSchema = z.object({
   id: z.string(),
   name: z.string(),
   email: z.string().email(),
-  role: z.enum(['USER', 'ADMIN']),
+  role: z.enum(["USER", "ADMIN"]),
   createdAt: z.string().or(z.date()),
 });
 

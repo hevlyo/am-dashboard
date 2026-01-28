@@ -123,6 +123,22 @@ export class DashboardService {
 
   async getDashboardData(filters: Filters): Promise<DashboardData> {
     const where = this.buildWhereClause(filters);
+    const categoryFilter =
+      filters.categories && filters.categories.length > 0
+        ? Prisma.sql`AND c."category" IN (${Prisma.join(
+            filters.categories.map(
+              (category) => Prisma.sql`CAST(${category} AS "Category")`,
+            ),
+          )})`
+        : Prisma.empty;
+    const statusFilter =
+      filters.status && filters.status.length > 0
+        ? Prisma.sql`AND s."status" IN (${Prisma.join(
+            filters.status.map(
+              (status) => Prisma.sql`CAST(${status} AS "StudentStatus")`,
+            ),
+          )})`
+        : Prisma.empty;
 
     // 1. Matrículas por Categoria (Gráfico de Barras)
     const byCategory = await this.prisma.enrollment.findMany({
@@ -155,8 +171,8 @@ export class DashboardService {
       WHERE 1=1
       ${filters.dateFrom ? Prisma.sql`AND e."enrolledAt" >= ${new Date(filters.dateFrom)}` : Prisma.empty}
       ${filters.dateTo ? Prisma.sql`AND e."enrolledAt" <= ${new Date(filters.dateTo)}` : Prisma.empty}
-      ${filters.categories && filters.categories.length > 0 ? Prisma.sql`AND c."category" IN (${Prisma.join(filters.categories as Category[])})` : Prisma.empty}
-      ${filters.status && filters.status.length > 0 ? Prisma.sql`AND s."status" IN (${Prisma.join(filters.status as StudentStatus[])})` : Prisma.empty}
+      ${categoryFilter}
+      ${statusFilter}
       ${filters.search ? Prisma.sql`AND s."name" ILIKE ${`%${filters.search}%`}` : Prisma.empty}
       GROUP BY date
       ORDER BY date ASC
@@ -202,8 +218,8 @@ export class DashboardService {
       WHERE 1=1
       ${filters.dateFrom ? Prisma.sql`AND e."enrolledAt" >= ${new Date(filters.dateFrom)}` : Prisma.empty}
       ${filters.dateTo ? Prisma.sql`AND e."enrolledAt" <= ${new Date(filters.dateTo)}` : Prisma.empty}
-      ${filters.categories && filters.categories.length > 0 ? Prisma.sql`AND c."category" IN (${Prisma.join(filters.categories as Category[])})` : Prisma.empty}
-      ${filters.status && filters.status.length > 0 ? Prisma.sql`AND s."status" IN (${Prisma.join(filters.status as StudentStatus[])})` : Prisma.empty}
+      ${categoryFilter}
+      ${statusFilter}
       ${filters.search ? Prisma.sql`AND s."name" ILIKE ${`%${filters.search}%`}` : Prisma.empty}
       GROUP BY date
       ORDER BY date ASC
