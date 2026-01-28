@@ -34,7 +34,7 @@ export function MultiSelectFilter({ title, options, value, onChange }: MultiSele
     <Popover>
       <PopoverTrigger asChild>
         <Button variant="outline" className={cn(
-          "justify-start hover:text-foreground border-dashed",
+          "justify-start hover:text-foreground",
           value.length > 0 ? "text-foreground bg-accent/50" : "text-muted-foreground"
         )}>
           <Filter className="mr-2 h-4 w-4" />
@@ -49,10 +49,10 @@ export function MultiSelectFilter({ title, options, value, onChange }: MultiSele
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[240px] p-0" align="start">
+      <PopoverContent className="w-[200px] p-0" align="start">
         <div className="p-2 space-y-2 max-h-[300px] overflow-y-auto">
           {options.map((option) => (
-            <div key={option.value} className="flex items-center space-x-2 p-1 hover:bg-muted/50 rounded">
+            <div key={option.value} className="flex items-center space-x-2">
               <Checkbox
                 id={`${title}-${option.value}`}
                 checked={value.includes(option.value)}
