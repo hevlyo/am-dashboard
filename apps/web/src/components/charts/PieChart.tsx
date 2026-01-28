@@ -36,6 +36,8 @@ const STATUS_COLORS: Record<string, string> = {
 };
 
 export function PieChart({ data, isLoading }: PieChartProps) {
+  const total = data?.reduce((acc, item) => acc + item.value, 0) || 0;
+
   if (isLoading) {
     return (
       <Card className="col-span-1 h-[400px] animate-pulse border shadow-sm">
@@ -110,14 +112,25 @@ export function PieChart({ data, isLoading }: PieChartProps) {
               height={36}
               iconType="circle"
               iconSize={8}
-              wrapperStyle={{ paddingTop: "20px", paddingBottom: "10px" }}
-              formatter={(value) => (
-                <span
-                  className="text-sm font-medium text-muted-foreground"
-                  style={{ marginLeft: 8, marginRight: 24 }}
-                >
-                  {value}
-                </span>
+              wrapperStyle={{ paddingTop: "24px", paddingBottom: "12px" }}
+              content={({ payload }) => (
+                <div className="flex flex-wrap items-center justify-center gap-4">
+                  {payload?.map((entry, index) => {
+                    const value = (entry.payload as any)?.value || 0;
+                    const percent = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                    const color = STATUS_COLORS[entry.value] || entry.color;
+                    
+                    return (
+                      <span key={`legend-${index}`} className="inline-flex items-center gap-2 text-sm font-medium text-foreground">
+                        <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: color }} />
+                        <span>{entry.value}</span>
+                        <span className="text-muted-foreground font-normal">
+                          {value} ({percent}%)
+                        </span>
+                      </span>
+                    );
+                  })}
+                </div>
               )}
             />
           </RechartsPieChart>

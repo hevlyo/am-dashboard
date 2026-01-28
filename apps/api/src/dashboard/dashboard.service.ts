@@ -60,7 +60,7 @@ export class DashboardService {
       activeStudents,
       totalCourses,
       avgProgressAgg,
-      completedAgg,
+      completedStudents,
     ] = await Promise.all([
       // Total de matrículas filtradas
       this.prisma.enrollment.count({ where }),
@@ -98,18 +98,21 @@ export class DashboardService {
         where,
       }),
 
-      // Taxa de conclusão (progress = 100)
-      this.prisma.enrollment.count({
-        where: {
-          ...where,
-          progress: 100,
-        },
-      }),
+      // Alunos concluídos (status COMPLETED)
+      this.prisma.enrollment
+        .groupBy({
+          by: ["studentId"],
+          where: {
+            ...where,
+            student: { status: "COMPLETED" },
+          },
+        })
+        .then((res) => res.length),
     ]);
 
     const averageProgress = avgProgressAgg._avg.progress || 0;
     const completionRate =
-      totalEnrollments > 0 ? (completedAgg / totalEnrollments) * 100 : 0;
+      totalStudents > 0 ? (completedStudents / totalStudents) * 100 : 0;
 
     return {
       totalEnrollments,

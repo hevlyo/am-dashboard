@@ -10,7 +10,6 @@ import { DateFilter } from '@/components/filters/DateFilter';
 import { MultiSelectFilter } from '@/components/filters/MultiSelectFilter';
 import { TextFilter } from '@/components/filters/TextFilter';
 import { Button } from '@/components/ui/button';
-import { X } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { CATEGORY_LABELS, STATUS_LABELS, type Category, type StudentStatus } from '@repo/schemas';
 
@@ -82,12 +81,11 @@ export function Dashboard() {
             </div>
             
             <div className="flex gap-2 w-full lg:w-auto">
-              <Button variant="outline" onClick={clearFilters} className="flex-1 lg:flex-none border-dashed hover:bg-muted/50">
-                <X className="mr-2 h-4 w-4" />
+              <Button variant="outline" onClick={clearFilters} className="flex-1 lg:flex-none hover:bg-muted/50 h-10 px-6">
                 Limpar
               </Button>
-              <Button onClick={applyFilters} className="flex-1 lg:flex-none bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-600/20">
-                Aplicar Filtros
+              <Button onClick={applyFilters} className="flex-1 lg:flex-none bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-600/20 h-10 px-6">
+                Filtrar Resultados
               </Button>
             </div>
           </div>

@@ -61,7 +61,7 @@ export function AreaChart({ data, isLoading }: AreaChartProps) {
         <ResponsiveContainer width="100%" height={300}>
           <RechartsAreaChart
             data={data}
-            margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+            margin={{ top: 10, right: 30, left: 0, bottom: 20 }}
           >
             <defs>
               <linearGradient id="colorProgress" x1="0" y1="0" x2="0" y2="1">
@@ -72,8 +72,8 @@ export function AreaChart({ data, isLoading }: AreaChartProps) {
             <CartesianGrid
               strokeDasharray="3 3"
               vertical={false}
-              strokeOpacity={0.1}
-              stroke="currentColor"
+              strokeOpacity={0.4}
+              stroke="hsl(var(--border))"
             />
             <XAxis
               dataKey="date"
@@ -82,6 +82,13 @@ export function AreaChart({ data, isLoading }: AreaChartProps) {
               tickLine={false}
               axisLine={false}
               dy={10}
+              tickFormatter={(value) => {
+                const date = new Date(value);
+                const month = date.toLocaleDateString('pt-BR', { month: 'short' }).replace('.', '');
+                const year = date.toLocaleDateString('pt-BR', { year: '2-digit' });
+                return `${month}/${year}`;
+              }}
+              minTickGap={30}
             />
             <YAxis
               stroke="#888888"
@@ -111,14 +118,16 @@ export function AreaChart({ data, isLoading }: AreaChartProps) {
               height={36}
               iconType="circle"
               iconSize={8}
-              wrapperStyle={{ paddingTop: "20px", paddingBottom: "10px" }}
-              formatter={(value) => (
-                <span
-                  className="text-sm font-medium text-muted-foreground"
-                  style={{ marginLeft: 8, marginRight: 24 }}
-                >
-                  {value}
-                </span>
+              wrapperStyle={{ paddingTop: "24px", paddingBottom: "12px" }}
+              content={({ payload }) => (
+                <div className="flex flex-wrap items-center gap-4">
+                  {payload?.map((entry) => (
+                    <span key={entry.value} className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground">
+                      <span className="h-2 w-2 rounded-full" style={{ backgroundColor: entry.color }} />
+                      {entry.value}
+                    </span>
+                  ))}
+                </div>
               )}
             />
             <Area
