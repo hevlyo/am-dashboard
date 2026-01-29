@@ -118,6 +118,9 @@ Este projeto foi construído utilizando um **Monorepo** com **Turborepo** e **pn
 ### Notas de Teste
 
 - O Jest usa `bcryptjs` via `moduleNameMapper` para evitar avisos de depreciação do Node ao importar `bcrypt` em ambiente de teste.
+- Para rodar testes localmente:
+  - API: `pnpm --filter api test`
+  - Web (E2E Playwright): `pnpm --filter web test` (requer frontend/API rodando e banco populado)
 
 ---
 
