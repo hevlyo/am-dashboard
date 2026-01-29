@@ -10,11 +10,17 @@ export const categoryEnum = z.enum([
 
 export const studentStatusEnum = z.enum(["ACTIVE", "INACTIVE", "COMPLETED"]);
 
+function coerceQueryArray(value: unknown): unknown {
+  if (value == null) return undefined;
+  if (Array.isArray(value)) return value;
+  return [value];
+}
+
 export const filtersSchema = z.object({
   dateFrom: z.string().optional(),
   dateTo: z.string().optional(),
-  categories: z.array(categoryEnum).optional(),
-  status: z.array(studentStatusEnum).optional(),
+  categories: z.preprocess(coerceQueryArray, z.array(categoryEnum)).optional(),
+  status: z.preprocess(coerceQueryArray, z.array(studentStatusEnum)).optional(),
   search: z.string().optional(),
 });
 
