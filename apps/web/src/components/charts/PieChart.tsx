@@ -116,13 +116,23 @@ export function PieChart({ data, isLoading }: PieChartProps) {
               content={({ payload }) => (
                 <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2">
                   {payload?.map((entry, index) => {
-                    const value = (entry.payload as any)?.value || 0;
-                    const percent = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                    const entryPayload = entry.payload as
+                      | { value?: number }
+                      | undefined;
+                    const value = entryPayload?.value ?? 0;
+                    const percent =
+                      total > 0 ? ((value / total) * 100).toFixed(1) : 0;
                     const color = STATUS_COLORS[entry.value] || entry.color;
-                    
+
                     return (
-                      <span key={`legend-${index}`} className="inline-flex items-center gap-2 text-sm font-medium text-foreground">
-                        <span className="h-2.5 w-2.5 rounded-full shrink-0" style={{ backgroundColor: color }} />
+                      <span
+                        key={`legend-${index}`}
+                        className="inline-flex items-center gap-2 text-sm font-medium text-foreground"
+                      >
+                        <span
+                          className="h-2.5 w-2.5 rounded-full shrink-0"
+                          style={{ backgroundColor: color }}
+                        />
                         <span>{entry.value}</span>
                         <span className="text-muted-foreground font-normal">
                           {percent}%

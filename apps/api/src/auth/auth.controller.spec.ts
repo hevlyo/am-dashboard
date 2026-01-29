@@ -1,4 +1,5 @@
 import { Test } from "@nestjs/testing";
+import type { Response } from "express";
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
 
@@ -11,7 +12,7 @@ describe("AuthController", () => {
     getProfile: jest.fn(),
   };
 
-  const createResponseMock = () => ({
+  const createResponseMock = (): Partial<Response> => ({
     cookie: jest.fn(),
     clearCookie: jest.fn(),
   });
@@ -36,7 +37,7 @@ describe("AuthController", () => {
 
     const result = await controller.login(
       { email: "user@test.com", password: "123" },
-      res as any,
+      res as Response,
     );
 
     expect(res.cookie).toHaveBeenCalledWith("refreshToken", "refresh", {
@@ -61,7 +62,7 @@ describe("AuthController", () => {
 
     const result = await controller.register(
       { name: "User", email: "user@test.com", password: "123456" },
-      res as any,
+      res as Response,
     );
 
     expect(res.cookie).toHaveBeenCalledWith("refreshToken", "refresh", {
@@ -92,7 +93,7 @@ describe("AuthController", () => {
         role: "USER",
         createdAt: new Date(),
       },
-      res as any,
+      res as Response,
     );
 
     expect(res.cookie).toHaveBeenCalledWith("refreshToken", "refresh", {
@@ -110,7 +111,7 @@ describe("AuthController", () => {
   it("clears refresh cookie on logout", async () => {
     const res = createResponseMock();
 
-    const result = await controller.logout(res as any);
+    const result = await controller.logout(res as Response);
 
     expect(res.clearCookie).toHaveBeenCalledWith("refreshToken");
     expect(result).toEqual({ message: "Logged out successfully" });

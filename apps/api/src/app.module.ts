@@ -13,8 +13,12 @@ import { HealthController } from "./health/health.controller";
       isGlobal: true,
     }),
     ThrottlerModule.forRoot({
-      ttl: 60,
-      limit: 100,
+      throttlers: [
+        {
+          ttl: 60,
+          limit: 100,
+        },
+      ],
     }),
     PrismaModule,
     AuthModule,

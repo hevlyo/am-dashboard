@@ -1,4 +1,5 @@
 import { Test } from "@nestjs/testing";
+import type { Filters } from "@repo/schemas";
 import { DashboardController } from "./dashboard.controller";
 import { DashboardService } from "./dashboard.service";
 
@@ -20,7 +21,7 @@ describe("DashboardController", () => {
   });
 
   it("delegates stats to service", async () => {
-    const filters = { search: "Ana" } as any;
+    const filters: Filters = { search: "Ana" };
     dashboardService.getStats.mockResolvedValue({ totalStudents: 10 });
 
     const result = await controller.getStats(filters);
@@ -30,7 +31,7 @@ describe("DashboardController", () => {
   });
 
   it("delegates dashboard data to service", async () => {
-    const filters = { search: "Ana" } as any;
+    const filters: Filters = { search: "Ana" };
     dashboardService.getDashboardData.mockResolvedValue({
       enrollmentsByCategory: [],
     });
