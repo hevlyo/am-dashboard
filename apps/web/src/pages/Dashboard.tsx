@@ -8,10 +8,11 @@ import { PieChart } from '@/components/charts/PieChart';
 import { AreaChart } from '@/components/charts/AreaChart';
 import { DateFilter } from '@/components/filters/DateFilter';
 import { MultiSelectFilter } from '@/components/filters/MultiSelectFilter';
+import { SelectFilter } from '@/components/filters/SelectFilter';
 import { TextFilter } from '@/components/filters/TextFilter';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
-import { CATEGORY_LABELS, STATUS_LABELS, type Category, type StudentStatus } from '@repo/schemas';
+import { STATUS_LABELS, type Category, type StudentStatus } from '@repo/schemas';
 
 export function Dashboard() {
   const {
@@ -47,7 +48,7 @@ export function Dashboard() {
         </div>
 
         <div className="bg-background/60 backdrop-blur-xl border rounded-2xl p-5 shadow-sm space-y-4">
-          <div className="flex flex-col lg:flex-row gap-4 items-end lg:items-center">
+          <div className="flex flex-col lg:flex-row gap-4 items-end lg:items-end">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:flex lg:flex-row gap-3 w-full lg:w-auto flex-1">
               <TextFilter
                 value={filters.search || ''}
@@ -60,14 +61,9 @@ export function Dashboard() {
                 }}
                 onChange={handleDateChange}
               />
-              <MultiSelectFilter
-                title="Categorias"
-                options={Object.entries(CATEGORY_LABELS).map(([value, label]) => ({
-                  value,
-                  label,
-                }))}
-                value={(filters.categories as string[]) || []}
-                onChange={(val) => updateFilter('categories', val as Category[])}
+              <SelectFilter
+                value={filters.categories || []}
+                onChange={(val) => updateFilter('categories', val)}
               />
               <MultiSelectFilter
                 title="Status"

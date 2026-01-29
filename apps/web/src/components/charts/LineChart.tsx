@@ -57,11 +57,11 @@ export function LineChart({ data, isLoading }: LineChartProps) {
         <CardTitle>Evolução de Matrículas</CardTitle>
         <CardDescription>Crescimento mensal da base de alunos</CardDescription>
       </CardHeader>
-      <CardContent className="pb-4 px-6">
+      <CardContent className="px-6">
         <ResponsiveContainer width="100%" height={300}>
           <RechartsLineChart
             data={data}
-            margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+            margin={{ top: 10, right: 30, left: -20, bottom: 0 }}
           >
             <CartesianGrid
               strokeDasharray="3 3"
@@ -111,12 +111,12 @@ export function LineChart({ data, isLoading }: LineChartProps) {
               height={36}
               iconType="circle"
               iconSize={8}
-              wrapperStyle={{ paddingTop: "24px", paddingBottom: "12px" }}
+              wrapperStyle={{ paddingTop: "24px", paddingBottom: "24px" }}
               content={({ payload }) => (
-                <div className="flex flex-wrap items-center gap-4">
+                <div className="flex flex-wrap items-center justify-center gap-4">
                   {payload?.map((entry) => (
                     <span key={entry.value} className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground">
-                      <span className="h-2 w-2 rounded-full" style={{ backgroundColor: entry.color }} />
+                      <span className="h-2.5 w-2.5 rounded-full shrink-0" style={{ backgroundColor: entry.color }} />
                       {entry.value}
                     </span>
                   ))}

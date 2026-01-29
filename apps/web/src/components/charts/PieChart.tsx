@@ -30,7 +30,7 @@ const COLORS = [
 ];
 
 const STATUS_COLORS: Record<string, string> = {
-  Inativo: "#ef4444", // red-500
+  Inativo: "#f97316", // orange-500
   Ativo: "#22c55e", // green-500
   Concluido: "#3b82f6", // blue-500
 };
@@ -72,9 +72,9 @@ export function PieChart({ data, isLoading }: PieChartProps) {
         <CardTitle>Status dos Alunos</CardTitle>
         <CardDescription>Distribuição atual da base de alunos</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pb-0">
         <ResponsiveContainer width="100%" height={300}>
-          <RechartsPieChart>
+          <RechartsPieChart margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
             <Pie
               data={data}
               cx="50%"
@@ -112,9 +112,9 @@ export function PieChart({ data, isLoading }: PieChartProps) {
               height={36}
               iconType="circle"
               iconSize={8}
-              wrapperStyle={{ paddingTop: "24px", paddingBottom: "12px" }}
+              wrapperStyle={{ paddingTop: "24px", paddingBottom: "24px" }}
               content={({ payload }) => (
-                <div className="flex flex-wrap items-center justify-center gap-4">
+                <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2">
                   {payload?.map((entry, index) => {
                     const value = (entry.payload as any)?.value || 0;
                     const percent = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
@@ -122,10 +122,10 @@ export function PieChart({ data, isLoading }: PieChartProps) {
                     
                     return (
                       <span key={`legend-${index}`} className="inline-flex items-center gap-2 text-sm font-medium text-foreground">
-                        <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: color }} />
+                        <span className="h-2.5 w-2.5 rounded-full shrink-0" style={{ backgroundColor: color }} />
                         <span>{entry.value}</span>
                         <span className="text-muted-foreground font-normal">
-                          {value} ({percent}%)
+                          {percent}%
                         </span>
                       </span>
                     );

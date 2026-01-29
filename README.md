@@ -46,7 +46,7 @@ Este projeto foi construído utilizando um **Monorepo** com **Turborepo** e **pn
 
 - **4 Tipos de Gráficos**: Barras, Linha, Pizza, Área
 - **4 Tipos de Filtros**: Data (Range), Select, Texto, Checkbox
-- Filtros persistem na URL e recarregam dados automaticamente
+- Filtros persistem no localStorage e recarregam dados automaticamente
 - **Cards de Métricas**: Total de alunos, matrículas, progresso, etc.
 
 ### UX/UI ✅
@@ -185,8 +185,8 @@ node apps/api/dist/src/main.js
 
 ## 🚢 CI
 
-O projeto conta com pipeline de **CI** no GitHub Actions:
+O projeto está preparado para integração com pipelines de **CI**:
 
-- **CI**: Roda Lint, Type Check e Testes em cada Pull Request.
+- **Qualidade**: Suporte para Lint, Type Check e Testes (configuração pronta para GitHub Actions).
 
 > Deploys são feitos automaticamente pelas integrações da Vercel e Render com o repositório.

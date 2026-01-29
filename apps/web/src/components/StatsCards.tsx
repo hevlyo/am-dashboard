@@ -80,7 +80,7 @@ export function StatsCards({ stats, isLoading }: StatsCardsProps) {
       <Card className="border shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-card to-card/50">
         <CardContent className="p-6 flex items-center justify-between">
           <div className="space-y-2">
-            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Taxa de Conclusão</p>
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Alunos Concluídos (%)</p>
             <div className="text-2xl font-bold tracking-tight">{stats.completionRate}%</div>
             <p className="text-xs text-gray-500 dark:text-gray-400">
               Alunos que finalizaram

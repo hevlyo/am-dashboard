@@ -66,7 +66,7 @@ test.describe("Dashboard Statistics", () => {
     await expect(
       page.getByRole("heading", { name: "Progresso Médio" }),
     ).toBeVisible();
-    await expect(page.getByText("Conclusão")).toBeVisible();
+    await expect(page.getByText("Alunos Concluídos (%)")).toBeVisible();
   });
 
   test("should display all chart sections", async ({ page }) => {
@@ -106,15 +106,18 @@ test.describe("Dashboard Filters", () => {
   test("should display all filter components", async ({ page }) => {
     await expect(page.getByPlaceholder(/buscar/i)).toBeVisible();
     await expect(
-      page.getByRole("button", { name: "Categorias" }),
+      page.getByRole("combobox", { name: "Categoria do curso" }),
     ).toBeVisible();
     await expect(page.getByRole("button", { name: "Status" })).toBeVisible();
-    await expect(page.getByRole("button", { name: /aplicar/i })).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: /filtrar resultados/i }),
+    ).toBeVisible();
     await expect(page.getByRole("button", { name: /limpar/i })).toBeVisible();
   });
 
   test("should open category filter dropdown", async ({ page }) => {
-    await page.click('button:has-text("Categorias")');
+    await page.getByRole("combobox", { name: "Categoria do curso" }).click();
+    await expect(page.getByText("Todas as Categorias")).toBeVisible();
     await expect(page.getByText("Redação")).toBeVisible();
     await expect(page.getByText("Matemática")).toBeVisible();
   });
@@ -133,7 +136,7 @@ test.describe("Dashboard Filters", () => {
         response.url().includes("/dashboard/data") &&
         response.url().includes("search="),
     );
-    await page.click('button:has-text("Aplicar")');
+    await page.click('button:has-text("Filtrar Resultados")');
     const response = await responsePromise;
     expect(response.status()).toBe(200);
   });
@@ -147,10 +150,10 @@ test.describe("Dashboard Filters", () => {
   });
 
   test("should persist filters in local storage", async ({ page }) => {
-    await page.click('button:has-text("Categorias")');
-    await page.click("text=Redação");
+    await page.getByRole("combobox", { name: "Categoria do curso" }).click();
+    await page.getByRole("option", { name: "Redação" }).click();
     await page.keyboard.press("Escape");
-    await page.click('button:has-text("Aplicar")');
+    await page.click('button:has-text("Filtrar Resultados")');
 
     const stored = await page.evaluate(() =>
       window.localStorage.getItem("dashboardFilters"),
@@ -159,7 +162,7 @@ test.describe("Dashboard Filters", () => {
 
     await page.reload();
     await expect(
-      page.getByRole("button", { name: /Categorias/i }),
+      page.getByRole("combobox", { name: "Categoria do curso" }),
     ).toBeVisible();
   });
 });

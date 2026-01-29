@@ -3,7 +3,7 @@ import * as bcrypt from "bcrypt";
 import * as path from "path";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-require("dotenv").config({ path: path.resolve(__dirname, "../../../.env") });
+require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 
 const prisma = new PrismaClient();
 

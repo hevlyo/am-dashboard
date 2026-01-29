@@ -57,11 +57,11 @@ export function AreaChart({ data, isLoading }: AreaChartProps) {
         <CardTitle>Progresso Médio</CardTitle>
         <CardDescription>Avanço dos alunos ao longo do tempo</CardDescription>
       </CardHeader>
-      <CardContent className="pl-0 pb-2">
+      <CardContent className="pl-0">
         <ResponsiveContainer width="100%" height={300}>
           <RechartsAreaChart
             data={data}
-            margin={{ top: 10, right: 30, left: 0, bottom: 20 }}
+            margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
           >
             <defs>
               <linearGradient id="colorProgress" x1="0" y1="0" x2="0" y2="1">
@@ -118,12 +118,12 @@ export function AreaChart({ data, isLoading }: AreaChartProps) {
               height={36}
               iconType="circle"
               iconSize={8}
-              wrapperStyle={{ paddingTop: "24px", paddingBottom: "12px" }}
+              wrapperStyle={{ paddingTop: "24px", paddingBottom: "24px" }}
               content={({ payload }) => (
-                <div className="flex flex-wrap items-center gap-4">
+                <div className="flex flex-wrap items-center justify-center gap-4">
                   {payload?.map((entry) => (
                     <span key={entry.value} className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground">
-                      <span className="h-2 w-2 rounded-full" style={{ backgroundColor: entry.color }} />
+                      <span className="h-2.5 w-2.5 rounded-full shrink-0" style={{ backgroundColor: entry.color }} />
                       {entry.value}
                     </span>
                   ))}

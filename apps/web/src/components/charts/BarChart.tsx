@@ -18,6 +18,22 @@ import {
 } from "@/components/ui/card";
 import type { ChartDataPoint } from "@repo/schemas";
 
+const ABBREVIATIONS: Record<string, string> = {
+  "Ciências Humanas": "Ciências Hum.",
+  "Ciências da Natureza": "Ciências Nat.",
+  "Linguagens e Códigos": "Linguagens",
+  "Matemática e suas Tecnologias": "Matemática",
+  "Ciências Humanas e suas Tecnologias": "Ciências Hum.",
+  "Ciências da Natureza e suas Tecnologias": "Ciências Nat.",
+  "Linguagens, Códigos e suas Tecnologias": "Linguagens",
+};
+
+const getAbbreviatedLabel = (label: string) => {
+  if (ABBREVIATIONS[label]) return ABBREVIATIONS[label];
+  if (label.length > 15) return `${label.substring(0, 12)}...`;
+  return label;
+};
+
 interface BarChartProps {
   data?: ChartDataPoint[];
   isLoading: boolean;
@@ -61,11 +77,11 @@ export function BarChart({ data, isLoading }: BarChartProps) {
           Distribuição de alunos por área de ensino
         </CardDescription>
       </CardHeader>
-      <CardContent className="pl-0 pb-2">
+      <CardContent className="pl-0 pb-0">
         <ResponsiveContainer width="100%" height={300}>
           <RechartsBarChart
             data={data}
-            margin={{ top: 20, right: 30, left: 0, bottom: 20 }}
+            margin={{ top: 28, right: 30, left: 0, bottom: 20 }}
           >
             <CartesianGrid
               strokeDasharray="3 3"
@@ -84,6 +100,8 @@ export function BarChart({ data, isLoading }: BarChartProps) {
               height={80}
               tick={(props) => {
                 const { x, y, payload } = props;
+                const fullLabel = payload.value as string;
+                const abbreviatedLabel = getAbbreviatedLabel(fullLabel);
                 return (
                   <g transform={`translate(${x},${y})`}>
                     <text
@@ -94,14 +112,8 @@ export function BarChart({ data, isLoading }: BarChartProps) {
                       fill="#888888"
                       fontSize={11}
                     >
-                      {payload.value &&
-                        payload.value
-                          .split(" ")
-                          .map((word: string, index: number) => (
-                            <tspan key={index} x={0} dy={index === 0 ? 0 : 12}>
-                              {word}
-                            </tspan>
-                          ))}
+                      {abbreviatedLabel}
+                      <title>{fullLabel}</title>
                     </text>
                   </g>
                 );
@@ -138,13 +150,19 @@ export function BarChart({ data, isLoading }: BarChartProps) {
               verticalAlign="bottom"
               height={36}
               iconType="circle"
-              iconSize={8}
-              wrapperStyle={{ paddingTop: "24px", paddingBottom: "12px" }}
+              iconSize={10}
+              wrapperStyle={{ paddingTop: "24px", paddingBottom: "24px" }}
               content={({ payload }) => (
-                <div className="flex flex-wrap items-center gap-4">
+                <div className="flex flex-wrap items-center justify-center gap-6">
                   {payload?.map((entry) => (
-                    <span key={entry.value} className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground">
-                      <span className="h-2 w-2 rounded-full" style={{ backgroundColor: entry.color }} />
+                    <span
+                      key={entry.value}
+                      className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground"
+                    >
+                      <span
+                        className="h-2.5 w-2.5 rounded-full shrink-0"
+                        style={{ backgroundColor: entry.color }}
+                      />
                       {entry.value}
                     </span>
                   ))}
@@ -159,10 +177,10 @@ export function BarChart({ data, isLoading }: BarChartProps) {
               barSize={32}
               fillOpacity={0.9}
             >
-              <LabelList 
-                dataKey="value" 
-                position="top" 
-                className="fill-[hsl(var(--foreground))] text-xs font-medium" 
+              <LabelList
+                dataKey="value"
+                position="top"
+                className="fill-[hsl(var(--foreground))] text-xs font-medium"
                 offset={8}
               />
             </Bar>
