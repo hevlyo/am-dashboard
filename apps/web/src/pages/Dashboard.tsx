@@ -18,10 +18,25 @@ export function Dashboard() {
   const { filters, appliedFilters, updateFilter, applyFilters, clearFilters } =
     useFilters();
 
-  const { data: stats, isLoading: loadingStats } =
-    useDashboardStats(appliedFilters);
-  const { data: chartData, isLoading: loadingCharts } =
-    useDashboardData(appliedFilters);
+  const {
+    data: stats,
+    isLoading: loadingStats,
+    isError: isStatsError,
+    refetch: refetchStats,
+  } = useDashboardStats(appliedFilters);
+  const {
+    data: chartData,
+    isLoading: loadingCharts,
+    isError: isChartsError,
+    refetch: refetchCharts,
+  } = useDashboardData(appliedFilters);
+
+  const isError = isStatsError || isChartsError;
+
+  const handleRetry = () => {
+    refetchStats();
+    refetchCharts();
+  };
 
   const handleDateChange = (range: {
     from: Date | undefined;
@@ -100,6 +115,30 @@ export function Dashboard() {
             </div>
           </div>
         </div>
+
+        {isError && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="rounded-xl border border-red-200 bg-red-50 p-4 dark:border-red-900/30 dark:bg-red-900/10"
+          >
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <p className="text-sm font-medium text-red-800 dark:text-red-200">
+                Falha ao carregar dados do dashboard. Verifique sua conexão e
+                tente novamente.
+              </p>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleRetry}
+                className="w-full sm:w-auto border-red-200 text-red-700 hover:bg-red-100 hover:text-red-900 dark:border-red-800 dark:text-red-300 dark:hover:bg-red-900/50 dark:hover:text-red-100"
+              >
+                Tentar novamente
+              </Button>
+            </div>
+          </motion.div>
+        )}
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
