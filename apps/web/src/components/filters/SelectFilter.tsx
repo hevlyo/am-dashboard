@@ -18,7 +18,9 @@ export function SelectFilter({ value, onChange }: SelectFilterProps) {
   return (
     <Select
       value={value[0] || ""}
-      onValueChange={(val) => onChange(val ? [val as Category] : [])}
+      onValueChange={(val) =>
+        onChange(val && val !== "all" ? [val as Category] : [])
+      }
     >
       <SelectTrigger className="w-[200px]" aria-label="Categoria do curso">
         <SelectValue placeholder="Categoria do Curso" />
