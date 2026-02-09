@@ -11,7 +11,6 @@ This project is a high-performance administrative dashboard built with a modern 
 - **Frontend (`apps/web`):** React + Vite + Tailwind CSS + shadcn/ui
 - **Backend (`apps/api`):** NestJS + Prisma ORM + PostgreSQL
 - **API Client Generation:** **Kubb** (Automated SDK generation from OpenAPI)
-- **Documentation:** **Mintlify** (Beautiful, AI-native documentation)
 - **Shared Packages:**  
   - `@repo/api-sdk`: Generated API hooks and types using Kubb.
   - `@repo/schemas`: Shared Zod schemas for validation.
@@ -24,10 +23,6 @@ This project is a high-performance administrative dashboard built with a modern 
 - **Web-based:** Responsive dashboard accessible from any browser.
 - **Secure Auth:** JWT with rotation via Refresh Tokens in HttpOnly cookies.
 - **Interactive Analytics:** Data visualization with Recharts.
-
-## 📖 Documentation
-
-The documentation is powered by **Mintlify**. You can find the source files in the `docs/` folder.
 
 ## 🚀 Getting Started
 
@@ -64,7 +59,6 @@ The documentation is powered by **Mintlify**. You can find the source files in t
 - `apps/web`: React web frontend.
 - `packages/api-sdk`: Auto-generated API client using Kubb.
 - `packages/schemas`: Manual Zod schemas.
-- `docs/`: Markdown files for Mintlify documentation.
 
 ---
 
