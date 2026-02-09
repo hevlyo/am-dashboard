@@ -14,6 +14,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import type { ChartDataPoint } from "@repo/schemas";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface PieChartProps {
   data?: ChartDataPoint[];
@@ -40,19 +41,21 @@ export function PieChart({ data, isLoading }: PieChartProps) {
 
   if (isLoading) {
     return (
-      <Card className="col-span-1 h-[400px] animate-pulse border shadow-sm">
+      <Card className="col-span-1 h-[400px] border-0 shadow-sm bg-card/50">
         <CardHeader>
-          <div className="h-6 w-48 bg-muted rounded mb-2" />
-          <div className="h-4 w-32 bg-muted rounded" />
+          <Skeleton className="h-6 w-48 mb-2" />
+          <Skeleton className="h-4 w-32" />
         </CardHeader>
-        <CardContent className="h-[300px] bg-muted/20 m-6 rounded" />
+        <CardContent className="h-[300px] flex items-center justify-center p-6 pt-0">
+          <Skeleton className="h-48 w-48 rounded-full" />
+        </CardContent>
       </Card>
     );
   }
 
   if (!data || data.length === 0) {
     return (
-      <Card className="col-span-1 h-[400px] border shadow-sm flex flex-col items-center justify-center text-center p-6">
+      <Card className="col-span-1 h-[400px] border shadow-sm flex flex-col items-center justify-center text-center p-6 bg-card/50">
         <div className="bg-muted/50 p-4 rounded-full mb-4">
           <div className="h-8 w-8 text-muted-foreground opacity-50" />
         </div>
@@ -67,9 +70,9 @@ export function PieChart({ data, isLoading }: PieChartProps) {
   }
 
   return (
-    <Card className="col-span-1 shadow-sm border h-[400px] hover:shadow-md transition-shadow">
+    <Card className="col-span-1 shadow-sm border h-[400px] hover:shadow-md transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-card to-card/50">
       <CardHeader>
-        <CardTitle>Status dos Alunos</CardTitle>
+        <CardTitle className="text-lg font-semibold tracking-tight">Status dos Alunos</CardTitle>
         <CardDescription>Distribuição atual da base de alunos</CardDescription>
       </CardHeader>
       <CardContent className="pb-0">
@@ -79,13 +82,15 @@ export function PieChart({ data, isLoading }: PieChartProps) {
               data={data}
               cx="50%"
               cy="50%"
-              innerRadius={85}
+              innerRadius={80}
               outerRadius={110}
               paddingAngle={4}
               dataKey="value"
               nameKey="label"
               strokeWidth={3}
               stroke="hsl(var(--card))"
+              animationDuration={1500}
+              animationEasing="ease-out"
             >
               {data?.map((entry, index) => (
                 <Cell
@@ -104,8 +109,9 @@ export function PieChart({ data, isLoading }: PieChartProps) {
                 borderRadius: "var(--radius)",
                 boxShadow: "var(--shadow-lg)",
                 padding: "12px",
+                borderWidth: "1px",
               }}
-              itemStyle={{ color: "hsl(var(--foreground))", fontWeight: "500" }}
+              itemStyle={{ color: "hsl(var(--foreground))", fontWeight: "600", fontSize: "13px" }}
             />
             <Legend
               verticalAlign="bottom"
@@ -127,14 +133,14 @@ export function PieChart({ data, isLoading }: PieChartProps) {
                     return (
                       <span
                         key={`legend-${index}`}
-                        className="inline-flex items-center gap-2 text-sm font-medium text-foreground"
+                        className="inline-flex items-center gap-2 text-xs font-medium text-muted-foreground"
                       >
                         <span
-                          className="h-2.5 w-2.5 rounded-full shrink-0"
+                          className="h-2 w-2 rounded-full shrink-0 shadow-sm"
                           style={{ backgroundColor: color }}
                         />
-                        <span>{entry.value}</span>
-                        <span className="text-muted-foreground font-normal">
+                        <span className="text-foreground">{entry.value}</span>
+                        <span className="text-muted-foreground font-normal opacity-70">
                           {percent}%
                         </span>
                       </span>

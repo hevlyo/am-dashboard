@@ -1,39 +1,32 @@
-import { useQuery } from '@tanstack/react-query';
-import { api } from '../services/api';
-import type { Filters, Stats, DashboardData } from '@repo/schemas';
+import { useDashboardControllerGetStats, useDashboardControllerGetData } from '@repo/api-sdk';
+import type { Filters } from '@repo/schemas';
 
 export function useDashboardStats(filters: Filters) {
-  return useQuery({
-    queryKey: ['dashboard', 'stats', filters],
-    queryFn: async () => {
-      // Clean undefined filters
-      const params = Object.fromEntries(
-        Object.entries(filters).filter(([_, v]) => v != null && v !== '')
-      );
-      
-      const { data } = await api.get<Stats>('/dashboard/stats', {
-        params,
-      });
-      return data;
+  const params = Object.fromEntries(
+    Object.entries(filters).filter(([_, v]) => v != null && v !== '')
+  );
+
+  return useDashboardControllerGetStats({
+    client: {
+      params,
     },
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    query: {
+      staleTime: 300000,
+    }
   });
 }
 
 export function useDashboardData(filters: Filters) {
-  return useQuery({
-    queryKey: ['dashboard', 'data', filters],
-    queryFn: async () => {
-      // Clean undefined filters
-      const params = Object.fromEntries(
-        Object.entries(filters).filter(([_, v]) => v != null && v !== '')
-      );
+  const params = Object.fromEntries(
+    Object.entries(filters).filter(([_, v]) => v != null && v !== '')
+  );
 
-      const { data } = await api.get<DashboardData>('/dashboard/data', {
-        params,
-      });
-      return data;
+  return useDashboardControllerGetData({
+    client: {
+      params,
     },
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    query: {
+      staleTime: 300000,
+    }
   });
 }
