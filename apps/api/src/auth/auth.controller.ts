@@ -56,7 +56,13 @@ export class AuthController {
       maxAge: 7 * 24 * 60 * 60 * 1000, 
     });
 
-    return { user, tokens };
+    return { 
+      user: {
+        ...user,
+        createdAt: user.createdAt.toISOString(),
+      },
+      tokens 
+    };
   }
 
   @Post("register")
@@ -78,7 +84,13 @@ export class AuthController {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    return { user, tokens };
+    return { 
+      user: {
+        ...user,
+        createdAt: user.createdAt.toISOString(),
+      }, 
+      tokens 
+    };
   }
 
   @Post("refresh")
@@ -103,7 +115,13 @@ export class AuthController {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    return { user: userData, tokens };
+    return { 
+      user: {
+        ...userData,
+        createdAt: userData.createdAt.toISOString(),
+      }, 
+      tokens 
+    };
   }
 
   @Post("logout")
@@ -122,12 +140,9 @@ export class AuthController {
   async me(@CurrentUser() user: User): Promise<UserDto> {
     const profile = await this.authService.getProfile(user.id);
     return {
-      id: profile.id,
-      name: profile.name,
-      email: profile.email,
-      role: profile.role,
-      avatar: profile.avatar || undefined,
+      ...profile,
       createdAt: profile.createdAt.toISOString(),
+      avatar: (profile as any).avatar || undefined,
     };
   }
 }
