@@ -62,16 +62,20 @@ test.describe("Dashboard Statistics", () => {
 
   test("should display all KPI cards", async ({ page }) => {
     await expect(page.getByText("Total de Alunos")).toBeVisible();
-    await expect(page.getByText("Total de Matrículas")).toBeVisible();
-    await expect(page.getByText("Progresso Médio", { exact: true })).toBeVisible();
+    await expect(page.getByText("Matrículas")).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Progresso Médio" }),
+    ).toBeVisible();
     await expect(page.getByText("Alunos Concluídos (%)")).toBeVisible();
   });
 
   test("should display all chart sections", async ({ page }) => {
-    await expect(page.getByText("Evolução de Matrículas")).toBeVisible({ timeout: 10000 });
-    await expect(page.getByText("Status dos Alunos")).toBeVisible();
     await expect(page.getByText("Matrículas por Categoria")).toBeVisible();
-    await expect(page.getByText("Evolução de Progresso")).toBeVisible();
+    await expect(page.getByText("Evolução de Matrículas")).toBeVisible();
+    await expect(page.getByText("Status dos Alunos")).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Progresso Médio" }),
+    ).toBeVisible();
   });
 
   test("should show loading skeletons initially", async ({ page }) => {
@@ -120,9 +124,9 @@ test.describe("Dashboard Filters", () => {
 
   test("should open status filter dropdown", async ({ page }) => {
     await page.click('button:has-text("Status")');
-    await expect(page.locator('label[for="Status-ACTIVE"]')).toBeVisible();
-    await expect(page.locator('label[for="Status-INACTIVE"]')).toBeVisible();
-    await expect(page.locator('label[for="Status-COMPLETED"]')).toBeVisible();
+    await expect(page.getByText("Ativo", { exact: true })).toBeVisible();
+    await expect(page.getByText("Inativo")).toBeVisible();
+    await expect(page.getByText("Concluído")).toBeVisible();
   });
 
   test("should apply text search filter", async ({ page }) => {

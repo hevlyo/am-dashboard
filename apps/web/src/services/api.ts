@@ -1,17 +1,12 @@
 import { axiosInstance as api } from '@repo/api-sdk';
 import type { InternalAxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 
-let accessToken: string | null = null;
-
-export const setAccessToken = (token: string | null) => {
-  accessToken = token;
-};
-
 api.defaults.baseURL = import.meta.env.VITE_API_URL || 'http://localhost:3333';
 
 api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-  if (accessToken) {
-    config.headers.Authorization = `Bearer ${accessToken}`;
+  const token = localStorage.getItem('accessToken');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });
@@ -33,13 +28,12 @@ api.interceptors.response.use(
       try {
         const { data } = await api.post('/auth/refresh');
         
-        setAccessToken(data.tokens.accessToken);
-        
-        originalRequest.headers.Authorization = `Bearer ${data.tokens.accessToken}`;
+        localStorage.setItem('accessToken', data.tokens.accessToken);
+        api.defaults.headers.common.Authorization = `Bearer ${data.tokens.accessToken}`;
         
         return api(originalRequest);
       } catch (refreshError) {
-        setAccessToken(null);
+        localStorage.removeItem('accessToken');
         window.location.href = '/login';
         return Promise.reject(refreshError);
       }
