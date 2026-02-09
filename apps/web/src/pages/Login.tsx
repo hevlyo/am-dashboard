@@ -37,6 +37,7 @@ export function Login() {
       await login(data.email, data.password);
       navigate("/");
     } catch (err: unknown) {
+      console.error("Login failed:", err);
       if (isAxiosError(err) && err.response?.status === 401) {
         setError("Email ou senha inválidos. Verifique suas credenciais.");
       } else {

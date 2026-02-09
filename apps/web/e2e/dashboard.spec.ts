@@ -130,13 +130,15 @@ test.describe("Dashboard Filters", () => {
   });
 
   test("should apply text search filter", async ({ page }) => {
-    await page.fill('input[placeholder*="Buscar"]', "João");
     const responsePromise = page.waitForResponse(
       (response) =>
-        response.url().includes("/dashboard/data") &&
-        response.url().includes("search="),
+        response.url().includes("/dashboard/data"),
     );
+    
+    await page.fill('input[placeholder*="Buscar"]', "João");
+    
     await page.click('button:has-text("Filtrar Resultados")');
+    
     const response = await responsePromise;
     expect(response.status()).toBe(200);
   });

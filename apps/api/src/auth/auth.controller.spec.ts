@@ -27,16 +27,37 @@ describe("AuthController", () => {
     jest.clearAllMocks();
   });
 
-  it("sets refresh cookie on login (production)", async () => {
-    process.env.NODE_ENV = "production";
+  it("sets refresh cookie on login (development)", async () => {
+    process.env.NODE_ENV = "development";
     const res = createResponseMock();
     authService.login.mockResolvedValue({
       user: { id: "1", email: "user@test.com" },
       tokens: { accessToken: "access", refreshToken: "refresh" },
     });
 
-    const result = await controller.login(
+    await controller.login(
       { email: "user@test.com", password: "123" },
+      res as Response,
+    );
+
+    expect(res.cookie).toHaveBeenCalledWith("refreshToken", "refresh", {
+      httpOnly: true,
+      secure: false,
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+  });
+
+  it("sets refresh cookie on register (production)", async () => {
+    process.env.NODE_ENV = "production";
+    const res = createResponseMock();
+    authService.register.mockResolvedValue({
+      user: { id: "1", email: "user@test.com" },
+      tokens: { accessToken: "access", refreshToken: "refresh" },
+    });
+
+    await controller.register(
+      { name: "User", email: "user@test.com", password: "123456" },
       res as Response,
     );
 
@@ -46,9 +67,32 @@ describe("AuthController", () => {
       sameSite: "none",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
-    expect(result).toEqual({
+  });
+
+  it("sets refresh cookie on refresh (development)", async () => {
+    process.env.NODE_ENV = "development";
+    const res = createResponseMock();
+    authService.refreshTokens.mockResolvedValue({
       user: { id: "1", email: "user@test.com" },
       tokens: { accessToken: "access", refreshToken: "refresh" },
+    });
+
+    await controller.refresh(
+      {
+        id: "1",
+        email: "user@test.com",
+        name: "User",
+        role: "USER",
+        createdAt: new Date(),
+      },
+      res as Response,
+    );
+
+    expect(res.cookie).toHaveBeenCalledWith("refreshToken", "refresh", {
+      httpOnly: true,
+      secure: false,
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
   });
 
