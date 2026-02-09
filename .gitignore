@@ -45,4 +45,5 @@ playwright-report
 playwright/.cache
 
 # Study materials (private)
+docs/
 CONTEXT.md
