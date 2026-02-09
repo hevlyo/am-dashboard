@@ -52,3 +52,17 @@ The Frontend (`apps/web`) is built for performance and perceived speed:
 - **Skeleton Screens:** Layout-aware skeletons prevent layout shifts (CLS).
 - **Optimistic Updates:** React Query caches ensure instant navigation.
 - **Staggered Animations:** Framer Motion adds polish to list items and cards.
+
+## 🛡️ Technical Decisions
+
+### Validation Strategy (Zod)
+We use a **Unified Schema** approach.
+- Schemas are defined in `@repo/schemas`.
+- **Backend:** Uses `ZodValidationPipe` to validate incoming DTOs.
+- **Frontend:** Uses the same schemas for React Hook Form validation.
+- **Result:** Single source of truth for validation rules.
+
+### Performance & Security
+- **Rate Limiting:** Implemented via `@nestjs/throttler` to prevent abuse.
+- **Strict Content Security:** All secrets are kept server-side; Frontend receives minimal configuration via env vars.
+- **Reduced Motion:** Animations respect user accessibility preferences automatically.
