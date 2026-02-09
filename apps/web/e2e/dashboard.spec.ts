@@ -130,21 +130,15 @@ test.describe("Dashboard Filters", () => {
   });
 
   test("should apply text search filter", async ({ page }) => {
+    await page.fill('input[placeholder*="Buscar"]', "João");
     const responsePromise = page.waitForResponse(
       (response) =>
-        response.url().includes("/dashboard/data"),
+        response.url().includes("/dashboard/data") &&
+        response.url().includes("search="),
     );
-    
-    await page.fill('input[placeholder*="Buscar"]', "João");
-    
-    // Explicit trigger to ensure request happens if debounce hasn't fired
     await page.click('button:has-text("Filtrar Resultados")');
-    
     const response = await responsePromise;
     expect(response.status()).toBe(200);
-    // Relaxed check: just ensure the URL contains 'data' endpoint, 
-    // strictly checking for search param might be flaky depending on how client constructs URL
-    expect(response.url()).toContain("/dashboard/data"); 
   });
 
   test("should clear all filters", async ({ page }) => {

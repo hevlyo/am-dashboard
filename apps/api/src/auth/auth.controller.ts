@@ -29,8 +29,6 @@ import { JwtAuthGuard } from "./guards/jwt-auth.guard";
 import { JwtRefreshGuard } from "./guards/jwt-refresh.guard";
 import { CurrentUser } from "../common/decorators/current-user.decorator";
 
-import { AuthResponseDto, UserDto } from "./dto/auth-response.dto";
-
 @ApiTags("auth")
 @Controller("auth")
 export class AuthController {
@@ -38,42 +36,37 @@ export class AuthController {
 
   @Post("login")
   @ApiOperation({ summary: "Login do usuário" })
-  @ApiResponse({ status: 200, description: "Login realizado com sucesso", type: AuthResponseDto })
+  @ApiResponse({ status: 200, description: "Login realizado com sucesso" })
   @ApiResponse({ status: 401, description: "Credenciais inválidas" })
   @UsePipes(new ZodValidationPipe(loginSchema))
   @HttpCode(HttpStatus.OK)
   async login(
     @Body() body: LoginInput,
     @Res({ passthrough: true }) res: Response,
-  ): Promise<AuthResponseDto> {
+  ) {
     const { user, tokens } = await this.authService.login(body);
 
+    // Set Refresh Token in HttpOnly Cookie
     const isProduction = process.env.NODE_ENV === "production";
     res.cookie("refreshToken", tokens.refreshToken, {
       httpOnly: true,
       secure: isProduction,
-      sameSite: isProduction ? "none" : "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000, 
+      sameSite: isProduction ? "none" : "strict", // 'none' required for cross-origin in production
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
-    return { 
-      user: {
-        ...user,
-        createdAt: user.createdAt.toISOString(),
-      },
-      tokens 
-    };
+    return { user, tokens };
   }
 
   @Post("register")
   @ApiOperation({ summary: "Registrar novo usuário" })
-  @ApiResponse({ status: 201, description: "Usuário criado com sucesso", type: AuthResponseDto })
+  @ApiResponse({ status: 201, description: "Usuário criado com sucesso" })
   @ApiResponse({ status: 409, description: "Email já cadastrado" })
   @UsePipes(new ZodValidationPipe(registerSchema))
   async register(
     @Body() body: RegisterInput,
     @Res({ passthrough: true }) res: Response,
-  ): Promise<AuthResponseDto> {
+  ) {
     const { user, tokens } = await this.authService.register(body);
 
     const isProduction = process.env.NODE_ENV === "production";
@@ -81,27 +74,21 @@ export class AuthController {
       httpOnly: true,
       secure: isProduction,
       sameSite: isProduction ? "none" : "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
-    return { 
-      user: {
-        ...user,
-        createdAt: user.createdAt.toISOString(),
-      }, 
-      tokens 
-    };
+    return { user, tokens };
   }
 
   @Post("refresh")
   @UseGuards(JwtRefreshGuard)
   @ApiOperation({ summary: "Renovar Access Token usando Refresh Token" })
-  @ApiResponse({ status: 200, description: "Token renovado com sucesso", type: AuthResponseDto })
+  @ApiResponse({ status: 200, description: "Token renovado com sucesso" })
   @HttpCode(HttpStatus.OK)
   async refresh(
     @CurrentUser() user: User,
     @Res({ passthrough: true }) res: Response,
-  ): Promise<AuthResponseDto> {
+  ) {
     const { user: userData, tokens } = await this.authService.refreshTokens(
       user.id,
       user.email,
@@ -112,16 +99,10 @@ export class AuthController {
       httpOnly: true,
       secure: isProduction,
       sameSite: isProduction ? "none" : "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
-    return { 
-      user: {
-        ...userData,
-        createdAt: userData.createdAt.toISOString(),
-      }, 
-      tokens 
-    };
+    return { user: userData, tokens };
   }
 
   @Post("logout")
@@ -136,13 +117,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth("JWT-auth")
   @ApiOperation({ summary: "Obter dados do usuário logado" })
-  @ApiResponse({ status: 200, description: "Dados do usuário", type: UserDto })
-  async me(@CurrentUser() user: User): Promise<UserDto> {
-    const profile = await this.authService.getProfile(user.id);
-    return {
-      ...profile,
-      createdAt: profile.createdAt.toISOString(),
-      avatar: (profile as { avatar?: string }).avatar || undefined,
-    };
+  async me(@CurrentUser() user: User) {
+    return this.authService.getProfile(user.id);
   }
 }

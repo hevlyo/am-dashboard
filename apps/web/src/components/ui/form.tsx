@@ -7,21 +7,12 @@ import {
   FieldValues,
   FormProvider,
   useFormContext,
-  FormProviderProps,
 } from "react-hook-form"
 
 import { cn } from "@/lib/utils"
 import { Label } from "@/components/ui/label"
 
-export const Form = <
-  TFieldValues extends FieldValues,
-  TContext = unknown,
-  TTransformedValues extends FieldValues | undefined = undefined
->(
-  props: FormProviderProps<TFieldValues, TContext, TTransformedValues>
-) => {
-  return <FormProvider {...props} />
-}
+const Form = FormProvider
 
 type FormFieldContextValue<
   TFieldValues extends FieldValues = FieldValues,
@@ -174,6 +165,7 @@ FormMessage.displayName = "FormMessage"
 
 export {
   useFormField,
+  Form,
   FormItem,
   FormLabel,
   FormControl,

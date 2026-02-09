@@ -5,13 +5,8 @@ import {
   useCallback,
   type ReactNode,
 } from "react";
-import { 
-  authControllerMe, 
-  authControllerLogin, 
-  authControllerRegister, 
-  authControllerLogout 
-} from "@repo/api-sdk";
-import type { User } from "@repo/schemas";
+import { api } from "../services/api";
+import type { User, AuthResponse } from "@repo/schemas";
 
 export interface AuthContextType {
   user: User | null;
@@ -32,8 +27,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const token = localStorage.getItem("accessToken");
 
     if (token) {
-      authControllerMe()
-        .then((data) => setUser(data))
+      api
+        .get<User>("/auth/me")
+        .then((res) => setUser(res.data))
         .catch((err) => {
           localStorage.removeItem("accessToken");
           setUser(null);
@@ -51,8 +47,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = useCallback(async (email: string, password: string) => {
-    const data = await authControllerLogin({
-      data: { email, password }
+    const { data } = await api.post<AuthResponse>("/auth/login", {
+      email,
+      password,
     });
 
     localStorage.setItem("accessToken", data.tokens.accessToken);
@@ -61,8 +58,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const register = useCallback(
     async (name: string, email: string, password: string) => {
-      const data = await authControllerRegister({
-        data: { name, email, password }
+      const { data } = await api.post<AuthResponse>("/auth/register", {
+        name,
+        email,
+        password,
       });
 
       localStorage.setItem("accessToken", data.tokens.accessToken);
@@ -74,7 +73,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = useCallback(() => {
     localStorage.removeItem("accessToken");
     setUser(null);
-    authControllerLogout().catch((err: unknown) => {
+    api.post("/auth/logout").catch((err) => {
       if (import.meta.env.DEV) {
         console.warn("[auth] Logout request failed", err);
       }

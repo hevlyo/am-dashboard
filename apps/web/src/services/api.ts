@@ -1,9 +1,11 @@
-import { axiosInstance as api } from '@repo/api-sdk';
-import type { InternalAxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
+import axios from 'axios';
 
-api.defaults.baseURL = import.meta.env.VITE_API_URL || 'http://localhost:3333';
+export const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3333',
+  withCredentials: true, // Importante para enviar cookies (refresh token)
+});
 
-api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+api.interceptors.request.use((config) => {
   const token = localStorage.getItem('accessToken');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -12,27 +14,29 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
 });
 
 api.interceptors.response.use(
-  (response: AxiosResponse) => response,
-  async (error: AxiosError) => {
-    const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
 
+    // Se erro for 401 e não for uma tentativa de refresh
     if (
       error.response?.status === 401 &&
-      originalRequest &&
       !originalRequest._retry &&
-      !originalRequest.url?.includes('/auth/login') &&
-      !originalRequest.url?.includes('/auth/refresh')
+      !originalRequest.url.includes('/auth/login')
     ) {
       originalRequest._retry = true;
 
       try {
+        // Tenta renovar o token
         const { data } = await api.post('/auth/refresh');
         
+        // Salva novo token e re-tenta request original
         localStorage.setItem('accessToken', data.tokens.accessToken);
         api.defaults.headers.common.Authorization = `Bearer ${data.tokens.accessToken}`;
         
         return api(originalRequest);
       } catch (refreshError) {
+        // Se refresh falhar, logout
         localStorage.removeItem('accessToken');
         window.location.href = '/login';
         return Promise.reject(refreshError);
@@ -42,5 +46,3 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
-export { api };

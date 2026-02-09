@@ -16,7 +16,6 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import type { TimeSeriesPoint } from "@repo/schemas";
-import { Skeleton } from "@/components/ui/skeleton";
 
 interface LineChartProps {
   data?: TimeSeriesPoint[];
@@ -26,21 +25,19 @@ interface LineChartProps {
 export function LineChart({ data, isLoading }: LineChartProps) {
   if (isLoading) {
     return (
-      <Card className="col-span-1 h-[400px] border-0 shadow-sm bg-card/50">
+      <Card className="col-span-1 h-[400px] animate-pulse border shadow-sm">
         <CardHeader>
-          <Skeleton className="h-6 w-48 mb-2" />
-          <Skeleton className="h-4 w-32" />
+          <div className="h-6 w-48 bg-muted rounded mb-2" />
+          <div className="h-4 w-32 bg-muted rounded" />
         </CardHeader>
-        <CardContent className="h-[300px] p-6 pt-0">
-          <Skeleton className="w-full h-full rounded-lg bg-muted/20" />
-        </CardContent>
+        <CardContent className="h-[300px] bg-muted/20 m-6 rounded" />
       </Card>
     );
   }
 
   if (!data || data.length === 0) {
     return (
-      <Card className="col-span-1 h-[400px] border shadow-sm flex flex-col items-center justify-center text-center p-6 bg-card/50">
+      <Card className="col-span-1 h-[400px] border shadow-sm flex flex-col items-center justify-center text-center p-6">
         <div className="bg-muted/50 p-4 rounded-full mb-4">
           <div className="h-8 w-8 text-muted-foreground opacity-50" />
         </div>
@@ -55,12 +52,12 @@ export function LineChart({ data, isLoading }: LineChartProps) {
   }
 
   return (
-    <Card className="col-span-1 shadow-sm border h-[400px] hover:shadow-md transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-card to-card/50">
+    <Card className="col-span-1 shadow-sm border h-[400px] hover:shadow-md transition-shadow">
       <CardHeader>
-        <CardTitle className="text-lg font-semibold tracking-tight">Evolução de Matrículas</CardTitle>
+        <CardTitle>Evolução de Matrículas</CardTitle>
         <CardDescription>Crescimento mensal da base de alunos</CardDescription>
       </CardHeader>
-      <CardContent className="px-6 pb-2">
+      <CardContent className="px-6">
         <ResponsiveContainer width="100%" height={300}>
           <RechartsLineChart
             data={data}
@@ -69,14 +66,13 @@ export function LineChart({ data, isLoading }: LineChartProps) {
             <CartesianGrid
               strokeDasharray="3 3"
               vertical={false}
-              strokeOpacity={0.2}
-              stroke="currentColor"
-              className="text-muted-foreground"
+              strokeOpacity={0.4}
+              stroke="hsl(var(--border))"
             />
             <XAxis
               dataKey="date"
-              stroke="currentColor"
-              fontSize={11}
+              stroke="#888888"
+              fontSize={12}
               tickLine={false}
               axisLine={false}
               dy={10}
@@ -87,15 +83,13 @@ export function LineChart({ data, isLoading }: LineChartProps) {
                 return `${month}/${year}`;
               }}
               minTickGap={30}
-              className="text-muted-foreground font-medium"
             />
             <YAxis
-              stroke="currentColor"
-              fontSize={11}
+              stroke="#888888"
+              fontSize={12}
               tickLine={false}
               axisLine={false}
               tickFormatter={(value) => `${value}`}
-              className="text-muted-foreground font-medium"
             />
             <Tooltip
               contentStyle={{
@@ -104,27 +98,25 @@ export function LineChart({ data, isLoading }: LineChartProps) {
                 borderRadius: "var(--radius)",
                 boxShadow: "var(--shadow-lg)",
                 padding: "12px",
-                borderWidth: "1px",
               }}
               labelStyle={{
                 color: "hsl(var(--foreground))",
                 fontWeight: "600",
                 marginBottom: "4px",
-                fontSize: "13px"
               }}
-              itemStyle={{ color: "hsl(var(--primary))", fontWeight: "500", fontSize: "13px" }}
+              itemStyle={{ color: "hsl(var(--primary))", fontWeight: "500" }}
             />
             <Legend
               verticalAlign="bottom"
               height={36}
               iconType="circle"
               iconSize={8}
-              wrapperStyle={{ paddingTop: "12px", paddingBottom: "12px" }}
+              wrapperStyle={{ paddingTop: "24px", paddingBottom: "24px" }}
               content={({ payload }) => (
                 <div className="flex flex-wrap items-center justify-center gap-4">
                   {payload?.map((entry) => (
-                    <span key={entry.value} className="inline-flex items-center gap-2 text-xs font-medium text-muted-foreground">
-                      <span className="h-2 w-2 rounded-full shrink-0" style={{ backgroundColor: entry.color }} />
+                    <span key={entry.value} className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground">
+                      <span className="h-2.5 w-2.5 rounded-full shrink-0" style={{ backgroundColor: entry.color }} />
                       {entry.value}
                     </span>
                   ))}
@@ -138,19 +130,17 @@ export function LineChart({ data, isLoading }: LineChartProps) {
               stroke="hsl(var(--primary))"
               strokeWidth={3}
               activeDot={{
-                r: 6,
+                r: 8,
                 fill: "hsl(var(--primary))",
                 stroke: "hsl(var(--background))",
                 strokeWidth: 2,
               }}
               dot={{
-                r: 3,
-                strokeWidth: 1.5,
+                r: 4,
+                strokeWidth: 2,
                 fill: "hsl(var(--background))",
                 stroke: "hsl(var(--primary))",
               }}
-              animationDuration={1500}
-              animationEasing="ease-in-out"
             />
           </RechartsLineChart>
         </ResponsiveContainer>

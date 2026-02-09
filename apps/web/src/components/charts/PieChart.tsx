@@ -14,7 +14,6 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import type { ChartDataPoint } from "@repo/schemas";
-import { Skeleton } from "@/components/ui/skeleton";
 
 interface PieChartProps {
   data?: ChartDataPoint[];
@@ -41,44 +40,21 @@ export function PieChart({ data, isLoading }: PieChartProps) {
 
   if (isLoading) {
     return (
-      <Card className="col-span-1 h-[400px] border-0 shadow-sm bg-card/50">
+      <Card className="col-span-1 h-[400px] animate-pulse border shadow-sm">
         <CardHeader>
-          <Skeleton className="h-6 w-48 mb-2" />
-          <Skeleton className="h-4 w-32" />
+          <div className="h-6 w-48 bg-muted rounded mb-2" />
+          <div className="h-4 w-32 bg-muted rounded" />
         </CardHeader>
-        <CardContent className="h-[300px] flex items-center justify-center p-6 pt-0">
-          <Skeleton className="h-48 w-48 rounded-full" />
-        </CardContent>
+        <CardContent className="h-[300px] bg-muted/20 m-6 rounded" />
       </Card>
     );
   }
 
   if (!data || data.length === 0) {
     return (
-      <Card className="col-span-1 h-[400px] border shadow-sm flex flex-col items-center justify-center text-center p-6 bg-card/50">
+      <Card className="col-span-1 h-[400px] border shadow-sm flex flex-col items-center justify-center text-center p-6">
         <div className="bg-muted/50 p-4 rounded-full mb-4">
-          <svg
-            className="h-8 w-8 text-muted-foreground opacity-50"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            aria-hidden="true"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"
-            />
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"
-            />
-          </svg>
-          <span className="sr-only">Gráfico de pizza vazio</span>
+          <div className="h-8 w-8 text-muted-foreground opacity-50" />
         </div>
         <h3 className="text-lg font-medium text-foreground">
           Sem dados disponíveis
@@ -91,9 +67,9 @@ export function PieChart({ data, isLoading }: PieChartProps) {
   }
 
   return (
-    <Card className="col-span-1 shadow-sm border h-[400px] hover:shadow-md transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-card to-card/50">
+    <Card className="col-span-1 shadow-sm border h-[400px] hover:shadow-md transition-shadow">
       <CardHeader>
-        <CardTitle className="text-lg font-semibold tracking-tight">Status dos Alunos</CardTitle>
+        <CardTitle>Status dos Alunos</CardTitle>
         <CardDescription>Distribuição atual da base de alunos</CardDescription>
       </CardHeader>
       <CardContent className="pb-0">
@@ -103,19 +79,17 @@ export function PieChart({ data, isLoading }: PieChartProps) {
               data={data}
               cx="50%"
               cy="50%"
-              innerRadius={80}
+              innerRadius={85}
               outerRadius={110}
               paddingAngle={4}
               dataKey="value"
               nameKey="label"
               strokeWidth={3}
               stroke="hsl(var(--card))"
-              animationDuration={1500}
-              animationEasing="ease-out"
             >
               {data?.map((entry, index) => (
                 <Cell
-                  key={`cell-${entry.label}`}
+                  key={`cell-${index}`}
                   fill={
                     STATUS_COLORS[entry.label] || COLORS[index % COLORS.length]
                   }
@@ -130,9 +104,8 @@ export function PieChart({ data, isLoading }: PieChartProps) {
                 borderRadius: "var(--radius)",
                 boxShadow: "var(--shadow-lg)",
                 padding: "12px",
-                borderWidth: "1px",
               }}
-              itemStyle={{ color: "hsl(var(--foreground))", fontWeight: "600", fontSize: "13px" }}
+              itemStyle={{ color: "hsl(var(--foreground))", fontWeight: "500" }}
             />
             <Legend
               verticalAlign="bottom"
@@ -142,7 +115,7 @@ export function PieChart({ data, isLoading }: PieChartProps) {
               wrapperStyle={{ paddingTop: "24px", paddingBottom: "24px" }}
               content={({ payload }) => (
                 <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2">
-                  {payload?.map((entry, _) => {
+                  {payload?.map((entry, index) => {
                     const entryPayload = entry.payload as
                       | { value?: number }
                       | undefined;
@@ -153,15 +126,15 @@ export function PieChart({ data, isLoading }: PieChartProps) {
 
                     return (
                       <span
-                        key={`legend-${entry.value}`}
-                        className="inline-flex items-center gap-2 text-xs font-medium text-muted-foreground"
+                        key={`legend-${index}`}
+                        className="inline-flex items-center gap-2 text-sm font-medium text-foreground"
                       >
                         <span
-                          className="h-2 w-2 rounded-full shrink-0 shadow-sm"
+                          className="h-2.5 w-2.5 rounded-full shrink-0"
                           style={{ backgroundColor: color }}
                         />
-                        <span className="text-foreground">{entry.value}</span>
-                        <span className="text-muted-foreground font-normal opacity-70">
+                        <span>{entry.value}</span>
+                        <span className="text-muted-foreground font-normal">
                           {percent}%
                         </span>
                       </span>

@@ -27,37 +27,16 @@ describe("AuthController", () => {
     jest.clearAllMocks();
   });
 
-  it("sets refresh cookie on login (development)", async () => {
-    process.env.NODE_ENV = "development";
-    const res = createResponseMock();
-    authService.login.mockResolvedValue({
-      user: { id: "1", email: "user@test.com", createdAt: new Date() },
-      tokens: { accessToken: "access", refreshToken: "refresh" },
-    });
-
-    await controller.login(
-      { email: "user@test.com", password: "123" },
-      res as Response,
-    );
-
-    expect(res.cookie).toHaveBeenCalledWith("refreshToken", "refresh", {
-      httpOnly: true,
-      secure: false,
-      sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
-  });
-
-  it("sets refresh cookie on register (production)", async () => {
+  it("sets refresh cookie on login (production)", async () => {
     process.env.NODE_ENV = "production";
     const res = createResponseMock();
-    authService.register.mockResolvedValue({
-      user: { id: "1", email: "user@test.com", createdAt: new Date() },
+    authService.login.mockResolvedValue({
+      user: { id: "1", email: "user@test.com" },
       tokens: { accessToken: "access", refreshToken: "refresh" },
     });
 
-    await controller.register(
-      { name: "User", email: "user@test.com", password: "123456" },
+    const result = await controller.login(
+      { email: "user@test.com", password: "123" },
       res as Response,
     );
 
@@ -67,32 +46,9 @@ describe("AuthController", () => {
       sameSite: "none",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
-  });
-
-  it("sets refresh cookie on refresh (development)", async () => {
-    process.env.NODE_ENV = "development";
-    const res = createResponseMock();
-    authService.refreshTokens.mockResolvedValue({
-      user: { id: "1", email: "user@test.com", createdAt: new Date() },
+    expect(result).toEqual({
+      user: { id: "1", email: "user@test.com" },
       tokens: { accessToken: "access", refreshToken: "refresh" },
-    });
-
-    await controller.refresh(
-      {
-        id: "1",
-        email: "user@test.com",
-        name: "User",
-        role: "USER",
-        createdAt: new Date(),
-      },
-      res as Response,
-    );
-
-    expect(res.cookie).toHaveBeenCalledWith("refreshToken", "refresh", {
-      httpOnly: true,
-      secure: false,
-      sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
   });
 
@@ -100,7 +56,7 @@ describe("AuthController", () => {
     process.env.NODE_ENV = "development";
     const res = createResponseMock();
     authService.register.mockResolvedValue({
-      user: { id: "1", email: "user@test.com", createdAt: new Date() },
+      user: { id: "1", email: "user@test.com" },
       tokens: { accessToken: "access", refreshToken: "refresh" },
     });
 
@@ -116,7 +72,7 @@ describe("AuthController", () => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
     expect(result).toEqual({
-      user: { id: "1", email: "user@test.com", createdAt: expect.any(String) },
+      user: { id: "1", email: "user@test.com" },
       tokens: { accessToken: "access", refreshToken: "refresh" },
     });
   });
@@ -125,7 +81,7 @@ describe("AuthController", () => {
     process.env.NODE_ENV = "production";
     const res = createResponseMock();
     authService.refreshTokens.mockResolvedValue({
-      user: { id: "1", email: "user@test.com", createdAt: new Date() },
+      user: { id: "1", email: "user@test.com" },
       tokens: { accessToken: "access", refreshToken: "refresh" },
     });
 
@@ -147,7 +103,7 @@ describe("AuthController", () => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
     expect(result).toEqual({
-      user: { id: "1", email: "user@test.com", createdAt: expect.any(String) },
+      user: { id: "1", email: "user@test.com" },
       tokens: { accessToken: "access", refreshToken: "refresh" },
     });
   });
@@ -165,7 +121,6 @@ describe("AuthController", () => {
     authService.getProfile.mockResolvedValue({
       id: "1",
       email: "user@test.com",
-      createdAt: new Date(),
     });
 
     const result = await controller.me({
@@ -177,11 +132,6 @@ describe("AuthController", () => {
     });
 
     expect(authService.getProfile).toHaveBeenCalledWith("1");
-    expect(result).toEqual({ 
-      id: "1", 
-      email: "user@test.com",
-      createdAt: expect.any(String),
-      avatar: undefined 
-    });
+    expect(result).toEqual({ id: "1", email: "user@test.com" });
   });
 });

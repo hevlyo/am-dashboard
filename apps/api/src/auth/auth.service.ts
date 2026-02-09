@@ -40,7 +40,7 @@ export class AuthService {
         name: user.name,
         email: user.email,
         role: user.role,
-        createdAt: user.createdAt,
+        createdAt: user.createdAt.toISOString(),
       },
       tokens,
     };
@@ -74,7 +74,7 @@ export class AuthService {
         name: user.name,
         email: user.email,
         role: user.role,
-        createdAt: user.createdAt,
+        createdAt: user.createdAt.toISOString(),
       },
       tokens,
     };
@@ -97,7 +97,7 @@ export class AuthService {
         name: user.name,
         email: user.email,
         role: user.role,
-        createdAt: user.createdAt,
+        createdAt: user.createdAt.toISOString(),
       },
       tokens,
     };
@@ -117,7 +117,7 @@ export class AuthService {
       name: user.name,
       email: user.email,
       role: user.role,
-      createdAt: user.createdAt,
+      createdAt: user.createdAt.toISOString(),
     };
   }
 

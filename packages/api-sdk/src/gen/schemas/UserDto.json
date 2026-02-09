@@ -1,1 +1,0 @@
-{"type":"object","properties":{"id":{"type":"string"},"name":{"type":"string"},"email":{"type":"string"},"role":{"type":"string","enum":["USER","ADMIN"]},"avatar":{"type":"string"},"createdAt":{"type":"string"}},"required":["id","name","email","role","createdAt"],"x-readme-ref-name":"UserDto"}
