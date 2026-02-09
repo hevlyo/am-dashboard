@@ -29,7 +29,9 @@ async function generate() {
   const document = SwaggerModule.createDocument(app, config);
   const outputPath = join(__dirname, "../../swagger.json");
   writeFileSync(outputPath, JSON.stringify(document, null, 2));
+  /* eslint-disable no-console */
   console.log(`Swagger JSON generated at: ${outputPath}`);
+  /* eslint-enable no-console */
   await app.close();
 }
 

@@ -74,7 +74,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = useCallback(() => {
     localStorage.removeItem("accessToken");
     setUser(null);
-    authControllerLogout().catch((err: any) => {
+    authControllerLogout().catch((err: unknown) => {
       if (import.meta.env.DEV) {
         console.warn("[auth] Logout request failed", err);
       }
