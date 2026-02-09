@@ -6,6 +6,7 @@ import { BarChart } from "@/components/charts/BarChart";
 import { LineChart } from "@/components/charts/LineChart";
 import { PieChart } from "@/components/charts/PieChart";
 import { AreaChart } from "@/components/charts/AreaChart";
+import { ChartErrorBoundary } from "@/components/charts/ChartErrorBoundary";
 import { DateFilter } from "@/components/filters/DateFilter";
 import { MultiSelectFilter } from "@/components/filters/MultiSelectFilter";
 import { SelectFilter } from "@/components/filters/SelectFilter";
@@ -194,22 +195,30 @@ export function Dashboard() {
             variants={item}
             className="grid gap-6 md:grid-cols-2"
           >
-            <BarChart
-              data={chartData?.enrollmentsByCategory}
-              isLoading={loadingCharts}
-            />
-            <LineChart
-              data={chartData?.enrollmentsOverTime}
-              isLoading={loadingCharts}
-            />
-            <PieChart
-              data={chartData?.studentsByStatus}
-              isLoading={loadingCharts}
-            />
-            <AreaChart
-              data={chartData?.progressOverTime}
-              isLoading={loadingCharts}
-            />
+            <ChartErrorBoundary>
+              <BarChart
+                data={chartData?.enrollmentsByCategory}
+                isLoading={loadingCharts}
+              />
+            </ChartErrorBoundary>
+            <ChartErrorBoundary>
+              <LineChart
+                data={chartData?.enrollmentsOverTime}
+                isLoading={loadingCharts}
+              />
+            </ChartErrorBoundary>
+            <ChartErrorBoundary>
+              <PieChart
+                data={chartData?.studentsByStatus}
+                isLoading={loadingCharts}
+              />
+            </ChartErrorBoundary>
+            <ChartErrorBoundary>
+              <AreaChart
+                data={chartData?.progressOverTime}
+                isLoading={loadingCharts}
+              />
+            </ChartErrorBoundary>
           </motion.div>
         </motion.div>
       </main>

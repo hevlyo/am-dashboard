@@ -3,6 +3,9 @@ import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 export const axiosInstance = axios.create({
   withCredentials: true,
   timeout: 10000,
+  headers: {
+    'X-Requested-With': 'XMLHttpRequest',
+  },
 });
 
 export type ResponseConfig<TData> = AxiosResponse<TData>;

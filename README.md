@@ -24,6 +24,10 @@ This project is a high-performance administrative dashboard built with a modern 
 - **Secure Auth:** JWT with rotation via Refresh Tokens in HttpOnly cookies.
 - **Interactive Analytics:** Data visualization with Recharts.
 
+## 📖 Documentation
+
+For a detailed deep dive into the system design, check our [System Architecture Guide](./ARCHITECTURE.md).
+
 ## 🚀 Getting Started
 
 ### Prerequisites
