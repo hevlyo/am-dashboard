@@ -94,7 +94,7 @@ export function PieChart({ data, isLoading }: PieChartProps) {
             >
               {data?.map((entry, index) => (
                 <Cell
-                  key={`cell-${index}`}
+                  key={`cell-${entry.label}`}
                   fill={
                     STATUS_COLORS[entry.label] || COLORS[index % COLORS.length]
                   }

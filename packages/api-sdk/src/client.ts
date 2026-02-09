@@ -2,6 +2,7 @@ import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 
 export const axiosInstance = axios.create({
   withCredentials: true,
+  timeout: 10000,
 });
 
 export type ResponseConfig<TData> = AxiosResponse<TData>;

@@ -31,8 +31,10 @@
     "typescript": "^5.3.0"
   },
   "dependencies": {
-    "@tanstack/react-query": "^5.0.0",
     "axios": "^1.6.0",
     "zod": "^3.22.0"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": "^5.0.0"
   }
 }

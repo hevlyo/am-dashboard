@@ -17,7 +17,7 @@ export default defineConfig(() => {
     },
     plugins: [
       pluginOas({
-        validate: false,
+        validate: process.env.CI === 'true',
       }),
       pluginTs(),
       pluginClient({

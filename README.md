@@ -6,13 +6,9 @@
 
 This project is a high-performance administrative dashboard built with a modern fullstack architecture. It leverages a **Monorepo** structure with **Turborepo** and **pnpm** for optimal development experience and scalability.
 
-### 📱 New: Mobile App
-We are now transforming this into a cross-platform solution with **Expo**, allowing the same dashboard logic to run on Web, iOS, and Android.
-
 ## 🛠️ Tech Stack
 
 - **Frontend (`apps/web`):** React + Vite + Tailwind CSS + shadcn/ui
-- **Mobile (`apps/mobile`):** Expo (React Native) + TypeScript
 - **Backend (`apps/api`):** NestJS + Prisma ORM + PostgreSQL
 - **Type Safety:** **Kubb** (Automated SDK generation from OpenAPI)
 - **Documentation:** **Mintlify** (Beautiful, AI-native documentation)
@@ -25,7 +21,7 @@ We are now transforming this into a cross-platform solution with **Expo**, allow
 
 - **Automated API SDK:** Uses Kubb to generate type-safe React Query hooks and Axios clients directly from NestJS Swagger.
 - **Unified Validation:** Shared Zod schemas ensure consistency between API and Client.
-- **Cross-Platform:** Dashboard accessible via Web and Mobile (Expo).
+- **Cross-Platform:** Dashboard accessible via Web.
 - **Secure Auth:** JWT with rotation via Refresh Tokens in HttpOnly cookies.
 - **Interactive Analytics:** Data visualization with Recharts.
 
@@ -66,7 +62,6 @@ The documentation is powered by **Mintlify**. You can find the source files in t
 
 - `apps/api`: NestJS backend.
 - `apps/web`: React web frontend.
-- `apps/mobile`: Expo mobile application.
 - `packages/api-sdk`: Auto-generated API client using Kubb.
 - `packages/schemas`: Manual Zod schemas.
 - `docs/`: Markdown files for Mintlify documentation.
