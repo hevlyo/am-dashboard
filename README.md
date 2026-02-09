@@ -34,12 +34,43 @@ This project is a high-performance administrative dashboard built with a modern 
 
 ### Installation
 
-1. **Install dependencies**
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/your-username/am-dashboard.git
+   cd am-dashboard
+   ```
+
+2. **Install dependencies**
    ```bash
    pnpm install
    ```
 
-2. **Generate API SDK**
+3. **Configure Environment Variables**
+   
+   Backend (`apps/api/.env`):
+   ```env
+   DATABASE_URL="postgresql://user:password@localhost:5432/amentoria"
+   JWT_SECRET="super-secret"
+   JWT_REFRESH_SECRET="super-refresh-secret"
+   CORS_ORIGINS="http://localhost:5173"
+   ```
+
+   Frontend (`apps/web/.env`):
+   ```env
+   VITE_API_URL="http://localhost:3333"
+   ```
+
+4. **Prepare Database**
+   ```bash
+   # Generate Prisma Client
+   pnpm prisma:generate
+   
+   # Run migrations and seed data
+   pnpm prisma:migrate
+   pnpm prisma:seed
+   ```
+
+5. **Generate API SDK**
    ```bash
    # Generate Swagger JSON from NestJS
    pnpm --filter api swagger:generate
@@ -48,10 +79,25 @@ This project is a high-performance administrative dashboard built with a modern 
    pnpm --filter @repo/api-sdk generate
    ```
 
-3. **Run Development**
+6. **Run Development**
    ```bash
    pnpm dev
    ```
+   - Frontend: http://localhost:5173
+   - Backend: http://localhost:3333
+   - Swagger Docs: http://localhost:3333/api/docs
+
+## 🔑 Test Credentials
+
+| Role      | Email                 | Password |
+| --------- | --------------------- | -------- |
+| **Admin** | `admin@amentoria.com` | `123456` |
+| **User**  | `teste@amentoria.com` | `123456` |
+
+## 🧪 Running Tests
+
+- **API Unit Tests:** `pnpm --filter api test`
+- **E2E Tests (Frontend):** `pnpm --filter web test` (requires running app)
 
 ## Folder Structure
 
