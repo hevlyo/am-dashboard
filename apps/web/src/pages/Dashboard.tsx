@@ -6,7 +6,7 @@ import { BarChart } from "@/components/charts/BarChart";
 import { LineChart } from "@/components/charts/LineChart";
 import { PieChart } from "@/components/charts/PieChart";
 import { AreaChart } from "@/components/charts/AreaChart";
-import { ChartErrorBoundary } from "@/components/charts/ChartErrorBoundary";
+
 import { DateFilter } from "@/components/filters/DateFilter";
 import { MultiSelectFilter } from "@/components/filters/MultiSelectFilter";
 import { SelectFilter } from "@/components/filters/SelectFilter";
