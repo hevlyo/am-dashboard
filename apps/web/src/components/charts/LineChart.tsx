@@ -154,7 +154,7 @@ export function LineChart({ data, isLoading }: LineChartProps) {
         <CardDescription>Crescimento mensal da base de alunos</CardDescription>
       </CardHeader>
       <CardContent className="px-6 pb-2">
-        <ChartErrorBoundary>
+        <ChartErrorBoundary title="Evolução de Matrículas">
           {renderContent()}
         </ChartErrorBoundary>
       </CardContent>

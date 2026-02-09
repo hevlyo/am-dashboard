@@ -157,7 +157,7 @@ export function AreaChart({ data, isLoading }: AreaChartProps) {
         <CardDescription>Avanço dos alunos ao longo do tempo</CardDescription>
       </CardHeader>
       <CardContent className="pl-0 pb-0">
-        <ChartErrorBoundary>
+        <ChartErrorBoundary title="Evolução de Progresso">
           {renderContent()}
         </ChartErrorBoundary>
       </CardContent>

@@ -172,7 +172,7 @@ export function PieChart({ data, isLoading }: PieChartProps) {
         <CardDescription>Distribuição atual da base de alunos</CardDescription>
       </CardHeader>
       <CardContent className="pb-0">
-        <ChartErrorBoundary>
+        <ChartErrorBoundary title="Status dos Alunos">
           {renderContent()}
         </ChartErrorBoundary>
       </CardContent>

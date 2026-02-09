@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 
 interface Props {
   children?: ReactNode;
+  title?: string;
 }
 
 interface State {
@@ -38,7 +39,7 @@ export class ChartErrorBoundary extends Component<Props, State> {
             <AlertCircle className="h-6 w-6 text-destructive" />
           </div>
           <h3 className="text-lg font-medium text-destructive mb-2">
-            Erro ao carregar gráfico
+            Erro ao carregar {this.props.title || "gráfico"}
           </h3>
           <p className="text-sm text-muted-foreground max-w-xs mb-4">
             Ocorreu um erro inesperado ao renderizar esta visualização.

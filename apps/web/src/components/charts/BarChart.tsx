@@ -198,7 +198,7 @@ export function BarChart({ data, isLoading }: BarChartProps) {
         </CardDescription>
       </CardHeader>
       <CardContent className="pl-0 pb-0">
-        <ChartErrorBoundary>
+        <ChartErrorBoundary title="Matrículas por Área">
           {renderContent()}
         </ChartErrorBoundary>
       </CardContent>
