@@ -137,10 +137,12 @@ test.describe("Dashboard Filters", () => {
     
     await page.fill('input[placeholder*="Buscar"]', "João");
     
+    // Explicit trigger to ensure request happens if debounce hasn't fired
     await page.click('button:has-text("Filtrar Resultados")');
     
     const response = await responsePromise;
     expect(response.status()).toBe(200);
+    expect(response.url()).toContain("search=");
   });
 
   test("should clear all filters", async ({ page }) => {

@@ -121,6 +121,13 @@ export class AuthController {
   @ApiResponse({ status: 200, description: "Dados do usuário", type: UserDto })
   async me(@CurrentUser() user: User): Promise<UserDto> {
     const profile = await this.authService.getProfile(user.id);
-    return profile as unknown as UserDto;
+    return {
+      id: profile.id,
+      name: profile.name,
+      email: profile.email,
+      role: profile.role,
+      avatar: profile.avatar || undefined,
+      createdAt: profile.createdAt.toISOString(),
+    };
   }
 }

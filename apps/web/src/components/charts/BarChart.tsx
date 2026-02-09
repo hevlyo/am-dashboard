@@ -50,8 +50,8 @@ export function BarChart({ data, isLoading }: BarChartProps) {
         </CardHeader>
         <CardContent className="h-[300px] p-6 pt-0">
             <div className="flex items-end justify-between h-full gap-4 pt-8">
-                {[1, 2, 3, 4, 5].map((i) => (
-                    <Skeleton key={i} className="w-full rounded-t-lg" style={{ height: `${Math.random() * 60 + 20}%` }} />
+                {[65, 40, 80, 55, 45].map((height, i) => (
+                    <Skeleton key={i} className="w-full rounded-t-lg" style={{ height: `${height}%` }} />
                 ))}
             </div>
         </CardContent>

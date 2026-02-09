@@ -2,7 +2,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Users, GraduationCap, BookOpen, TrendingUp } from 'lucide-react';
 import type { Stats } from '@repo/schemas';
 import { Skeleton } from '@/components/ui/skeleton';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 
 interface StatsCardsProps {
   stats?: Stats;
@@ -25,6 +25,8 @@ const item = {
 };
 
 export function StatsCards({ stats, isLoading }: StatsCardsProps) {
+  const reduceMotion = useReducedMotion();
+
   if (isLoading) {
     return (
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -50,8 +52,8 @@ export function StatsCards({ stats, isLoading }: StatsCardsProps) {
   return (
     <motion.div 
       variants={container}
-      initial="hidden"
-      animate="show"
+      initial={reduceMotion ? false : "hidden"}
+      animate={reduceMotion ? false : "show"}
       className="grid gap-6 md:grid-cols-2 lg:grid-cols-4"
     >
       <motion.div variants={item}>
