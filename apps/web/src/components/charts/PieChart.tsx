@@ -57,7 +57,28 @@ export function PieChart({ data, isLoading }: PieChartProps) {
     return (
       <Card className="col-span-1 h-[400px] border shadow-sm flex flex-col items-center justify-center text-center p-6 bg-card/50">
         <div className="bg-muted/50 p-4 rounded-full mb-4">
-          <div className="h-8 w-8 text-muted-foreground opacity-50" />
+          <svg
+            className="h-8 w-8 text-muted-foreground opacity-50"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"
+            />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"
+            />
+          </svg>
+          <span className="sr-only">Gráfico de pizza vazio</span>
         </div>
         <h3 className="text-lg font-medium text-foreground">
           Sem dados disponíveis
@@ -121,7 +142,7 @@ export function PieChart({ data, isLoading }: PieChartProps) {
               wrapperStyle={{ paddingTop: "24px", paddingBottom: "24px" }}
               content={({ payload }) => (
                 <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2">
-                  {payload?.map((entry, index) => {
+                  {payload?.map((entry, _) => {
                     const entryPayload = entry.payload as
                       | { value?: number }
                       | undefined;
@@ -132,7 +153,7 @@ export function PieChart({ data, isLoading }: PieChartProps) {
 
                     return (
                       <span
-                        key={`legend-${index}`}
+                        key={`legend-${entry.value}`}
                         className="inline-flex items-center gap-2 text-xs font-medium text-muted-foreground"
                       >
                         <span

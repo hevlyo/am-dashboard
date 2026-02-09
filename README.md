@@ -10,9 +10,9 @@ This project is a high-performance administrative dashboard built with a modern 
 
 - **Frontend (`apps/web`):** React + Vite + Tailwind CSS + shadcn/ui
 - **Backend (`apps/api`):** NestJS + Prisma ORM + PostgreSQL
-- **Type Safety:** **Kubb** (Automated SDK generation from OpenAPI)
+- **API Client Generation:** **Kubb** (Automated SDK generation from OpenAPI)
 - **Documentation:** **Mintlify** (Beautiful, AI-native documentation)
-- **Shared Packages:** 
+- **Shared Packages:**  
   - `@repo/api-sdk`: Generated API hooks and types using Kubb.
   - `@repo/schemas`: Shared Zod schemas for validation.
   - `@repo/typescript-config`: Centralized TS configurations.
@@ -21,7 +21,7 @@ This project is a high-performance administrative dashboard built with a modern 
 
 - **Automated API SDK:** Uses Kubb to generate type-safe React Query hooks and Axios clients directly from NestJS Swagger.
 - **Unified Validation:** Shared Zod schemas ensure consistency between API and Client.
-- **Cross-Platform:** Dashboard accessible via Web.
+- **Web-based:** Responsive dashboard accessible from any browser.
 - **Secure Auth:** JWT with rotation via Refresh Tokens in HttpOnly cookies.
 - **Interactive Analytics:** Data visualization with Recharts.
 

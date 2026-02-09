@@ -142,7 +142,7 @@ export class AuthController {
     return {
       ...profile,
       createdAt: profile.createdAt.toISOString(),
-      avatar: (profile as any).avatar || undefined,
+      avatar: (profile as { avatar?: string }).avatar || undefined,
     };
   }
 }
