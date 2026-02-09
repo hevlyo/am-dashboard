@@ -31,7 +31,7 @@ describe("AuthController", () => {
     process.env.NODE_ENV = "development";
     const res = createResponseMock();
     authService.login.mockResolvedValue({
-      user: { id: "1", email: "user@test.com" },
+      user: { id: "1", email: "user@test.com", createdAt: new Date() },
       tokens: { accessToken: "access", refreshToken: "refresh" },
     });
 
@@ -52,7 +52,7 @@ describe("AuthController", () => {
     process.env.NODE_ENV = "production";
     const res = createResponseMock();
     authService.register.mockResolvedValue({
-      user: { id: "1", email: "user@test.com" },
+      user: { id: "1", email: "user@test.com", createdAt: new Date() },
       tokens: { accessToken: "access", refreshToken: "refresh" },
     });
 
@@ -73,7 +73,7 @@ describe("AuthController", () => {
     process.env.NODE_ENV = "development";
     const res = createResponseMock();
     authService.refreshTokens.mockResolvedValue({
-      user: { id: "1", email: "user@test.com" },
+      user: { id: "1", email: "user@test.com", createdAt: new Date() },
       tokens: { accessToken: "access", refreshToken: "refresh" },
     });
 
@@ -100,7 +100,7 @@ describe("AuthController", () => {
     process.env.NODE_ENV = "development";
     const res = createResponseMock();
     authService.register.mockResolvedValue({
-      user: { id: "1", email: "user@test.com" },
+      user: { id: "1", email: "user@test.com", createdAt: new Date() },
       tokens: { accessToken: "access", refreshToken: "refresh" },
     });
 
@@ -116,7 +116,7 @@ describe("AuthController", () => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
     expect(result).toEqual({
-      user: { id: "1", email: "user@test.com" },
+      user: { id: "1", email: "user@test.com", createdAt: expect.any(String) },
       tokens: { accessToken: "access", refreshToken: "refresh" },
     });
   });
@@ -125,7 +125,7 @@ describe("AuthController", () => {
     process.env.NODE_ENV = "production";
     const res = createResponseMock();
     authService.refreshTokens.mockResolvedValue({
-      user: { id: "1", email: "user@test.com" },
+      user: { id: "1", email: "user@test.com", createdAt: new Date() },
       tokens: { accessToken: "access", refreshToken: "refresh" },
     });
 
@@ -147,7 +147,7 @@ describe("AuthController", () => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
     expect(result).toEqual({
-      user: { id: "1", email: "user@test.com" },
+      user: { id: "1", email: "user@test.com", createdAt: expect.any(String) },
       tokens: { accessToken: "access", refreshToken: "refresh" },
     });
   });
@@ -165,6 +165,7 @@ describe("AuthController", () => {
     authService.getProfile.mockResolvedValue({
       id: "1",
       email: "user@test.com",
+      createdAt: new Date(),
     });
 
     const result = await controller.me({
@@ -176,6 +177,11 @@ describe("AuthController", () => {
     });
 
     expect(authService.getProfile).toHaveBeenCalledWith("1");
-    expect(result).toEqual({ id: "1", email: "user@test.com" });
+    expect(result).toEqual({ 
+      id: "1", 
+      email: "user@test.com",
+      createdAt: expect.any(String),
+      avatar: undefined 
+    });
   });
 });
