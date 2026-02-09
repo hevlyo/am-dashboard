@@ -20,7 +20,7 @@ graph TD
     E --> F
     E --> G
     D --> G
-    F --> D
+    D --> F
 ```
 
 ## 🔌 API-First Development (Kubb)
@@ -35,16 +35,19 @@ We treat the API contract (OpenAPI/Swagger) as the single source of truth.
 
 **Benefit:** If the Backend changes a field name, the Frontend build fails immediately. No more runtime errors due to mismatched types.
 
-## 🔐 Authentication Flow
+## 🔐 Authentication Flow (Memory-Only)
 
-Security is paramount. We implement a robust JWT strategy:
+We implement a **secure JWT strategy** that protects against XSS attacks by keeping tokens out of `localStorage`:
 
-1.  **Login:** API returns `accessToken` (short-lived) and sets `refreshToken` (long-lived) in an **HttpOnly Cookie**.
-2.  **Client:** Stores `accessToken` in memory/localStorage for API calls.
-3.  **Interceptors:** The `@repo/api-sdk` has a centralized Axios interceptor.
+1.  **Login:** API returns `accessToken` (JSON response) and sets `refreshToken` (long-lived) in an **HttpOnly Cookie**.
+2.  **Client (Memory):** Stores `accessToken` only in **React State** (never in `localStorage`). The token is injected into Axios via a setter function.
+3.  **Page Refresh:** On app mount, the client calls `/auth/refresh` to obtain a fresh `accessToken` using the persistent `refreshToken` cookie.
+4.  **Interceptors:** The `@repo/api-sdk` has a centralized Axios interceptor.
     *   If a 401 occurs, it automatically calls `/auth/refresh`.
-    *   If refresh succeeds, it retries the original request transparently.
-    *   If refresh fails, it redirects to login.
+    *   If refresh succeeds, it updates the in-memory token and retries the original request.
+    *   If refresh fails, it clears the token and redirects to login.
+
+**Benefit:** Even if an attacker injects malicious JavaScript (XSS), they cannot steal the access token from memory on page refresh (unlike `localStorage`).
 
 ## 🎨 UI/UX Philosophy
 
