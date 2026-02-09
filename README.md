@@ -1,6 +1,6 @@
 # AM Dashboard - Fullstack Platform
 
-> A modern administrative dashboard platform with React, Expo, and NestJS.
+> A modern administrative dashboard platform with React and NestJS.
 
 ## 🚀 Overview
 
