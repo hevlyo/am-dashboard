@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 
 interface Props {
   children?: ReactNode;
-  title?: string;
 }
 
 interface State {
@@ -27,7 +26,7 @@ export class ChartErrorBoundary extends Component<Props, State> {
     }
   }
 
-  private handleReset = () => {
+  private readonly handleReset = () => {
     this.setState({ hasError: false });
   };
 
