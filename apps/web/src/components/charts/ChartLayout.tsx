@@ -7,15 +7,16 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { ChartErrorBoundary } from "./ChartErrorBoundary";
+import { BarChart3 } from "lucide-react";
 
 interface ChartLayoutProps {
-  title: string;
-  description: string;
-  isLoading: boolean;
-  isEmpty: boolean;
-  emptyMessage: string;
-  children: ReactNode;
-  contentClassName?: string;
+  readonly title: string;
+  readonly description: string;
+  readonly isLoading: boolean;
+  readonly isEmpty: boolean;
+  readonly emptyMessage: string;
+  readonly children: ReactNode;
+  readonly contentClassName?: string;
 }
 
 export function ChartLayout({
@@ -26,7 +27,7 @@ export function ChartLayout({
   emptyMessage,
   children,
   contentClassName = "pl-0 pb-0",
-}: ChartLayoutProps) {
+}: Readonly<ChartLayoutProps>) {
   if (isLoading) {
     return (
       <Card className="col-span-1 h-[400px] animate-pulse border shadow-sm">
@@ -44,7 +45,7 @@ export function ChartLayout({
       return (
         <div className="h-[300px] flex flex-col items-center justify-center text-center p-6">
           <div className="bg-muted/50 p-4 rounded-full mb-4">
-            <div className="h-8 w-8 text-muted-foreground opacity-50" />
+            <BarChart3 className="h-8 w-8 text-muted-foreground opacity-50" />
           </div>
           <h3 className="text-lg font-medium text-foreground">
             Sem dados disponíveis
