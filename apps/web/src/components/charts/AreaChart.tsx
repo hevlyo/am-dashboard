@@ -8,15 +8,8 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
 import type { TimeSeriesPoint } from "@repo/schemas";
-import { ChartErrorBoundary } from "./ChartErrorBoundary";
+import { ChartLayout } from "./ChartLayout";
 
 interface AreaChartProps {
   data?: TimeSeriesPoint[];
@@ -24,36 +17,15 @@ interface AreaChartProps {
 }
 
 export function AreaChart({ data, isLoading }: AreaChartProps) {
-  if (isLoading) {
-    return (
-      <Card className="col-span-1 h-[400px] animate-pulse border shadow-sm">
-        <CardHeader>
-          <div className="h-6 w-48 bg-muted rounded mb-2" />
-          <div className="h-4 w-32 bg-muted rounded" />
-        </CardHeader>
-        <CardContent className="h-[300px] bg-muted/20 m-6 rounded" />
-      </Card>
-    );
-  }
-
-  const renderContent = () => {
-    if (!data || data.length === 0) {
-      return (
-        <div className="h-[300px] flex flex-col items-center justify-center text-center p-6">
-          <div className="bg-muted/50 p-4 rounded-full mb-4">
-            <div className="h-8 w-8 text-muted-foreground opacity-50" />
-          </div>
-          <h3 className="text-lg font-medium text-foreground">
-            Sem dados disponíveis
-          </h3>
-          <p className="text-sm text-muted-foreground max-w-xs">
-            Não há dados de progresso para exibir neste período.
-          </p>
-        </div>
-      );
-    }
-
-    return (
+  return (
+    <ChartLayout
+      title="Progresso Médio"
+      description="Avanço dos alunos ao longo do tempo"
+      isLoading={isLoading}
+      isEmpty={!data || data.length === 0}
+      emptyMessage="Não há dados de progresso para exibir neste período."
+      contentClassName="pl-0"
+    >
       <ResponsiveContainer width="100%" height={300}>
         <RechartsAreaChart
           data={data}
@@ -143,20 +115,6 @@ export function AreaChart({ data, isLoading }: AreaChartProps) {
           />
         </RechartsAreaChart>
       </ResponsiveContainer>
-    );
-  };
-
-  return (
-    <Card className="col-span-1 shadow-sm border h-[400px] hover:shadow-md transition-shadow">
-      <CardHeader>
-        <CardTitle>Progresso Médio</CardTitle>
-        <CardDescription>Avanço dos alunos ao longo do tempo</CardDescription>
-      </CardHeader>
-      <CardContent className="pl-0">
-        <ChartErrorBoundary title="Progresso Médio">
-          {renderContent()}
-        </ChartErrorBoundary>
-      </CardContent>
-    </Card>
+    </ChartLayout>
   );
 }

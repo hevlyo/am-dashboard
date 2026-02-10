@@ -1,32 +1,48 @@
-# Arquitetura do Sistema - AM Dashboard
+# 🏗️ Arquitetura do Sistema - AM Dashboard
 
-Este documento descreve as principais decisões de arquitetura, padrões de segurança e resiliência implementados no AM Dashboard.
+Este documento fornece uma visão técnica da arquitetura do AM Dashboard, destacando as decisões de design que garantem segurança, resiliência e uma experiência de desenvolvimento moderna.
 
-## 1. Segurança de Autenticação
+## 🔄 Estrutura Monorepo
 
-O sistema utiliza um modelo de autenticação híbrido e altamente seguro:
+Utilizamos **Turborepo** + **pnpm workspaces** para gerenciar a base de código fullstack. Isso garante:
+- **Configurações Compartilhadas:** ESLint, TypeScript e Tailwind centralizados.
+- **Lógica Compartilhada:** Schemas Zod compartilhados entre API e Frontend.
+- **Builds Atômicos:** Pipelines de CI/CD rápidos com cache de build.
 
-- **Access Token (Memória):** O JWT de acesso é armazenado apenas em memória no cliente. Isso o protege contra ataques XSS (Cross-Site Scripting), já que scripts maliciosos não conseguem ler o token da memória de execução de forma trivial.
-- **Refresh Token (HttpOnly Cookie):** O token de renovação é armazenado em um cookie `HttpOnly`, `Secure` e `SameSite=Strict`. Isso impede o acesso via JavaScript, mitigando riscos de roubo de sessão.
-- **Refresh Automático:** O cliente tenta renovar o Access Token automaticamente em caso de expiração (401) ou no carregamento inicial da aplicação.
+## 🔐 Estratégia de Autenticação e Segurança
 
-## 2. Proteção contra CSRF
+A segurança é o pilar central desta implementação. Adotamos uma estratégia de defesa em profundidade:
 
-Implementamos uma estratégia de defesa em profundidade contra Cross-Site Request Forgery:
+### 1. Armazenamento de Tokens (Memory-Only)
+Para mitigar ataques **XSS (Cross-Site Scripting)**, o sistema utiliza um modelo híbrido:
+- **Access Token:** Armazenado apenas em memória volatil do JavaScript. Scripts maliciosos não conseguem ler o token do disco ou do armazenamento persistente do navegador.
+- **Refresh Token:** Armazenado em um **HttpOnly Cookie** com flags `Secure` e `SameSite=Strict`. Isso impede o acesso via JavaScript e protege contra roubo de sessão.
 
-- **Custom Header Validation:** O backend exige um cabeçalho customizado (`x-requested-with` ou `x-csrf-token`) para todas as rotas de mutação (POST, PUT, DELETE, PATCH). Como navegadores não permitem que requisições cross-origin adicionem cabeçalhos customizados sem uma preflight CORS bem-sucedida, isso bloqueia ataques CSRF automáticos.
-- **CORS Estrito:** O backend valida a origem da requisição contra uma lista branca configurável (`CORS_ORIGINS`).
+### 2. Proteção contra CSRF
+Implementamos uma validação rigorosa para todas as requisições de mutação (POST, PUT, DELETE, PATCH):
+- **Custom Header Validation:** O backend exige cabeçalhos como `x-requested-with` ou `x-csrf-token`. Navegadores impedem que requisições cross-origin adicionem cabeçalhos customizados sem uma preflight CORS bem-sucedida.
+- **CORS Estrito:** Validação de origem contra uma whitelist dinâmica configurada via variáveis de ambiente.
 
-## 3. Resiliência da Interface
+## 🛡️ Resiliência da Interface
 
-Para garantir que falhas parciais não quebrem a experiência total do usuário:
+O Dashboard foi projetado para ser tolerante a falhas parciais:
+- **Chart Error Boundaries:** Cada gráfico é isolado por uma barreira de erro React. Se um componente falhar (devido a dados malformados, por exemplo), apenas aquele gráfico exibe um estado de erro, mantendo o restante da aplicação funcional.
+- **Auto-Recuperação:** Os usuários podem tentar renderizar novamente componentes falhos sem precisar atualizar a página inteira.
 
-- **Chart Error Boundaries:** Cada gráfico é envolvido por uma barreira de erro React. Se um gráfico falhar na renderização devido a dados inesperados, apenas aquele componente mostra um estado de erro, permitindo que o restante do dashboard continue funcional.
-- **Reset de Erro:** O usuário pode tentar renderizar o gráfico novamente através de um botão de reset na própria barreira de erro.
+## 🎨 Filosofia de UI/UX
 
-## 4. Fluxo de Dados
+O Frontend (`apps/web`) foca em performance percebida e fluidez:
+- **Skeleton Screens:** Skeletons integrados ao layout evitam saltos visuais (Cumulative Layout Shift) durante o carregamento de dados.
+- **Interceptores Axios:** Fluxo de refresh de token transparente. Quando um token expira (401), o interceptor captura, renova o token em background e repete a requisição original sem que o usuário perceba.
 
-O frontend consome a API REST utilizando Axios com interceptores para:
-1. Inserir o Access Token em todas as requisições.
-2. Capturar erros 401 e disparar o fluxo de renovação de token.
-3. Tratamento global de erros e logs em desenvolvimento.
+## 🛠️ Decisões Técnicas
+
+### Validação Unificada (Zod)
+- Schemas definidos em `@repo/schemas`.
+- **Backend:** Uso de pipes de validação para garantir a integridade dos DTOs de entrada.
+- **Frontend:** Uso dos mesmos schemas para validação de formulários com React Hook Form.
+- **Benefício:** Garantia de que as regras de negócio são idênticas em ambas as pontas.
+
+### Performance
+- **Throttling:** Implementado via `@nestjs/throttler` no backend para prevenir abusos e ataques de força bruta.
+- **Build Optimization:** Divisão de código (code-splitting) automática para garantir que o bundle inicial seja leve.

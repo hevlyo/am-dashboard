@@ -8,15 +8,8 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
 import type { TimeSeriesPoint } from "@repo/schemas";
-import { ChartErrorBoundary } from "./ChartErrorBoundary";
+import { ChartLayout } from "./ChartLayout";
 
 interface LineChartProps {
   data?: TimeSeriesPoint[];
@@ -24,36 +17,15 @@ interface LineChartProps {
 }
 
 export function LineChart({ data, isLoading }: LineChartProps) {
-  if (isLoading) {
-    return (
-      <Card className="col-span-1 h-[400px] animate-pulse border shadow-sm">
-        <CardHeader>
-          <div className="h-6 w-48 bg-muted rounded mb-2" />
-          <div className="h-4 w-32 bg-muted rounded" />
-        </CardHeader>
-        <CardContent className="h-[300px] bg-muted/20 m-6 rounded" />
-      </Card>
-    );
-  }
-
-  const renderContent = () => {
-    if (!data || data.length === 0) {
-      return (
-        <div className="h-[300px] flex flex-col items-center justify-center text-center p-6">
-          <div className="bg-muted/50 p-4 rounded-full mb-4">
-            <div className="h-8 w-8 text-muted-foreground opacity-50" />
-          </div>
-          <h3 className="text-lg font-medium text-foreground">
-            Sem dados disponíveis
-          </h3>
-          <p className="text-sm text-muted-foreground max-w-xs">
-            Não há histórico para exibir neste período.
-          </p>
-        </div>
-      );
-    }
-
-    return (
+  return (
+    <ChartLayout
+      title="Evolução de Matrículas"
+      description="Crescimento mensal da base de alunos"
+      isLoading={isLoading}
+      isEmpty={!data || data.length === 0}
+      emptyMessage="Não há histórico para exibir neste período."
+      contentClassName="px-6"
+    >
       <ResponsiveContainer width="100%" height={300}>
         <RechartsLineChart
           data={data}
@@ -140,20 +112,6 @@ export function LineChart({ data, isLoading }: LineChartProps) {
           />
         </RechartsLineChart>
       </ResponsiveContainer>
-    );
-  };
-
-  return (
-    <Card className="col-span-1 shadow-sm border h-[400px] hover:shadow-md transition-shadow">
-      <CardHeader>
-        <CardTitle>Evolução de Matrículas</CardTitle>
-        <CardDescription>Crescimento mensal da base de alunos</CardDescription>
-      </CardHeader>
-      <CardContent className="px-6">
-        <ChartErrorBoundary title="Evolução de Matrículas">
-          {renderContent()}
-        </ChartErrorBoundary>
-      </CardContent>
-    </Card>
+    </ChartLayout>
   );
 }

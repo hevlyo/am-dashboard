@@ -6,15 +6,8 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
 import type { ChartDataPoint } from "@repo/schemas";
-import { ChartErrorBoundary } from "./ChartErrorBoundary";
+import { ChartLayout } from "./ChartLayout";
 
 interface PieChartProps {
   data?: ChartDataPoint[];
@@ -22,53 +15,32 @@ interface PieChartProps {
 }
 
 const COLORS = [
-  "#3b82f6", // blue-500
-  "#8b5cf6", // violet-500
-  "#10b981", // emerald-500
-  "#f59e0b", // amber-500
-  "#ec4899", // pink-500
-  "#06b6d4", // cyan-500
+  "#3b82f6",
+  "#8b5cf6",
+  "#10b981",
+  "#f59e0b",
+  "#ec4899",
+  "#06b6d4",
 ];
 
 const STATUS_COLORS: Record<string, string> = {
-  Inativo: "#f97316", // orange-500
-  Ativo: "#22c55e", // green-500
-  Concluido: "#3b82f6", // blue-500
+  Inativo: "#f97316",
+  Ativo: "#22c55e",
+  Concluido: "#3b82f6",
 };
 
 export function PieChart({ data, isLoading }: PieChartProps) {
   const total = data?.reduce((acc, item) => acc + item.value, 0) || 0;
 
-  if (isLoading) {
-    return (
-      <Card className="col-span-1 h-[400px] animate-pulse border shadow-sm">
-        <CardHeader>
-          <div className="h-6 w-48 bg-muted rounded mb-2" />
-          <div className="h-4 w-32 bg-muted rounded" />
-        </CardHeader>
-        <CardContent className="h-[300px] bg-muted/20 m-6 rounded" />
-      </Card>
-    );
-  }
-
-  const renderContent = () => {
-    if (!data || data.length === 0) {
-      return (
-        <div className="h-[300px] flex flex-col items-center justify-center text-center p-6">
-          <div className="bg-muted/50 p-4 rounded-full mb-4">
-            <div className="h-8 w-8 text-muted-foreground opacity-50" />
-          </div>
-          <h3 className="text-lg font-medium text-foreground">
-            Sem dados disponíveis
-          </h3>
-          <p className="text-sm text-muted-foreground max-w-xs">
-            Não há dados de status para exibir.
-          </p>
-        </div>
-      );
-    }
-
-    return (
+  return (
+    <ChartLayout
+      title="Status dos Alunos"
+      description="Distribuição atual da base de alunos"
+      isLoading={isLoading}
+      isEmpty={!data || data.length === 0}
+      emptyMessage="Não há dados de status para exibir."
+      contentClassName="pb-0"
+    >
       <ResponsiveContainer width="100%" height={300}>
         <RechartsPieChart margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
           <Pie
@@ -141,20 +113,6 @@ export function PieChart({ data, isLoading }: PieChartProps) {
           />
         </RechartsPieChart>
       </ResponsiveContainer>
-    );
-  };
-
-  return (
-    <Card className="col-span-1 shadow-sm border h-[400px] hover:shadow-md transition-shadow">
-      <CardHeader>
-        <CardTitle>Status dos Alunos</CardTitle>
-        <CardDescription>Distribuição atual da base de alunos</CardDescription>
-      </CardHeader>
-      <CardContent className="pb-0">
-        <ChartErrorBoundary title="Status dos Alunos">
-          {renderContent()}
-        </ChartErrorBoundary>
-      </CardContent>
-    </Card>
+    </ChartLayout>
   );
 }

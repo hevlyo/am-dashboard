@@ -9,15 +9,8 @@ import {
   ResponsiveContainer,
   LabelList,
 } from "recharts";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
 import type { ChartDataPoint } from "@repo/schemas";
-import { ChartErrorBoundary } from "./ChartErrorBoundary";
+import { ChartLayout } from "./ChartLayout";
 
 const ABBREVIATIONS: Record<string, string> = {
   "Ciências Humanas": "Ciências Hum.",
@@ -41,37 +34,14 @@ interface BarChartProps {
 }
 
 export function BarChart({ data, isLoading }: BarChartProps) {
-  if (isLoading) {
-    return (
-      <Card className="col-span-1 h-[400px] animate-pulse border shadow-sm">
-        <CardHeader>
-          <div className="h-6 w-48 bg-muted rounded mb-2" />
-          <div className="h-4 w-32 bg-muted rounded" />
-        </CardHeader>
-        <CardContent className="h-[300px] bg-muted/20 m-6 rounded" />
-      </Card>
-    );
-  }
-
-  const renderContent = () => {
-    if (!data || data.length === 0) {
-      return (
-        <div className="h-[300px] flex flex-col items-center justify-center text-center p-6">
-          <div className="bg-muted/50 p-4 rounded-full mb-4">
-            <div className="h-8 w-8 text-muted-foreground opacity-50" />
-          </div>
-          <h3 className="text-lg font-medium text-foreground">
-            Sem dados disponíveis
-          </h3>
-          <p className="text-sm text-muted-foreground max-w-xs">
-            Não há matrículas para exibir com os filtros selecionados. Tente
-            expandir o período.
-          </p>
-        </div>
-      );
-    }
-
-    return (
+  return (
+    <ChartLayout
+      title="Matrículas por Categoria"
+      description="Distribuição de alunos por área de ensino"
+      isLoading={isLoading}
+      isEmpty={!data || data.length === 0}
+      emptyMessage="Não há matrículas para exibir com os filtros selecionados. Tente expandir o período."
+    >
       <ResponsiveContainer width="100%" height={300}>
         <RechartsBarChart
           data={data}
@@ -180,22 +150,6 @@ export function BarChart({ data, isLoading }: BarChartProps) {
           </Bar>
         </RechartsBarChart>
       </ResponsiveContainer>
-    );
-  };
-
-  return (
-    <Card className="col-span-1 shadow-sm border h-[400px] hover:shadow-md transition-shadow">
-      <CardHeader>
-        <CardTitle>Matrículas por Categoria</CardTitle>
-        <CardDescription>
-          Distribuição de alunos por área de ensino
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="pl-0 pb-0">
-        <ChartErrorBoundary title="Matrículas por Categoria">
-          {renderContent()}
-        </ChartErrorBoundary>
-      </CardContent>
-    </Card>
+    </ChartLayout>
   );
 }
