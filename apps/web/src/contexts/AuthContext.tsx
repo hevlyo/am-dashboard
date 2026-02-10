@@ -5,7 +5,7 @@ import {
   useCallback,
   type ReactNode,
 } from "react";
-import { api } from "../services/api";
+import { api, setAccessToken } from "../services/api";
 import type { User, AuthResponse } from "@repo/schemas";
 
 export interface AuthContextType {
@@ -24,26 +24,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-
-    if (token) {
-      api
-        .get<User>("/auth/me")
-        .then((res) => setUser(res.data))
-        .catch((err) => {
-          localStorage.removeItem("accessToken");
-          setUser(null);
-          if (import.meta.env.DEV) {
-            console.warn(
-              "[auth] Failed to load /auth/me, clearing session",
-              err,
-            );
-          }
-        })
-        .finally(() => setIsLoading(false));
-    } else {
-      setIsLoading(false);
-    }
+    const checkSession = async () => {
+      try {
+        const { data } = await api.post<AuthResponse>("/auth/refresh");
+        setAccessToken(data.tokens.accessToken);
+        setUser(data.user);
+      } catch {
+        setAccessToken(null);
+        setUser(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    checkSession();
   }, []);
 
   const login = useCallback(async (email: string, password: string) => {
@@ -52,7 +46,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       password,
     });
 
-    localStorage.setItem("accessToken", data.tokens.accessToken);
+    setAccessToken(data.tokens.accessToken);
     setUser(data.user);
   }, []);
 
@@ -64,14 +58,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         password,
       });
 
-      localStorage.setItem("accessToken", data.tokens.accessToken);
+      setAccessToken(data.tokens.accessToken);
       setUser(data.user);
     },
     [],
   );
 
   const logout = useCallback(() => {
-    localStorage.removeItem("accessToken");
+    setAccessToken(null);
     setUser(null);
     api.post("/auth/logout").catch((err) => {
       if (import.meta.env.DEV) {

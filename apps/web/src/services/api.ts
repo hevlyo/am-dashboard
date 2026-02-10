@@ -1,14 +1,19 @@
 import axios from 'axios';
 
+let accessToken: string | null = null;
+
+export const setAccessToken = (token: string | null) => {
+  accessToken = token;
+};
+
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3333',
   withCredentials: true, // Importante para enviar cookies (refresh token)
 });
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('accessToken');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+  if (accessToken) {
+    config.headers.Authorization = `Bearer ${accessToken}`;
   }
   return config;
 });
@@ -31,13 +36,14 @@ api.interceptors.response.use(
         const { data } = await api.post('/auth/refresh');
         
         // Salva novo token e re-tenta request original
-        localStorage.setItem('accessToken', data.tokens.accessToken);
-        api.defaults.headers.common.Authorization = `Bearer ${data.tokens.accessToken}`;
+        setAccessToken(data.tokens.accessToken);
+        
+        originalRequest.headers.Authorization = `Bearer ${data.tokens.accessToken}`;
         
         return api(originalRequest);
       } catch (refreshError) {
         // Se refresh falhar, logout
-        localStorage.removeItem('accessToken');
+        setAccessToken(null);
         window.location.href = '/login';
         return Promise.reject(refreshError);
       }
