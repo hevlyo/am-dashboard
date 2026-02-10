@@ -6,12 +6,13 @@ import {
   type ReactNode,
 } from "react";
 import { 
-  authControllerMe, 
   authControllerLogin, 
   authControllerRegister, 
-  authControllerLogout 
+  authControllerLogout, 
+  authControllerRefresh 
 } from "@repo/api-sdk";
 import type { User } from "@repo/schemas";
+import { setAccessToken } from "../services/api";
 
 export interface AuthContextType {
   user: User | null;
@@ -29,25 +30,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-
-    if (token) {
-      authControllerMe()
-        .then((data) => setUser(data))
-        .catch((err) => {
-          localStorage.removeItem("accessToken");
-          setUser(null);
-          if (import.meta.env.DEV) {
-            console.warn(
-              "[auth] Failed to load /auth/me, clearing session",
-              err,
-            );
-          }
-        })
-        .finally(() => setIsLoading(false));
-    } else {
-      setIsLoading(false);
-    }
+    const checkSession = async () => {
+      try {
+        const data = await authControllerRefresh();
+        setAccessToken(data.tokens.accessToken);
+        setUser(data.user);
+      } catch {
+        setAccessToken(null);
+        setUser(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    checkSession();
   }, []);
 
   const login = useCallback(async (email: string, password: string) => {
@@ -55,7 +51,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       data: { email, password }
     });
 
-    localStorage.setItem("accessToken", data.tokens.accessToken);
+    setAccessToken(data.tokens.accessToken);
     setUser(data.user);
   }, []);
 
@@ -65,14 +61,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         data: { name, email, password }
       });
 
-      localStorage.setItem("accessToken", data.tokens.accessToken);
+      setAccessToken(data.tokens.accessToken);
       setUser(data.user);
     },
     [],
   );
 
   const logout = useCallback(() => {
-    localStorage.removeItem("accessToken");
+    setAccessToken(null);
     setUser(null);
     authControllerLogout().catch((err: unknown) => {
       if (import.meta.env.DEV) {
