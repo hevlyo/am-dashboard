@@ -34,15 +34,15 @@ export function MultiSelectFilter({ title, options, value, onChange }: MultiSele
     <Popover>
       <PopoverTrigger asChild>
         <Button variant="outline" className={cn(
-          "justify-start hover:text-foreground",
+          "justify-start hover:text-foreground max-w-[200px]",
           value.length > 0 ? "text-foreground bg-accent/50" : "text-muted-foreground"
         )}>
-          <Filter className="mr-2 h-4 w-4" />
-          {title}
+          <Filter className="mr-2 h-4 w-4 shrink-0" />
+          <span className="truncate">{title}</span>
           {value.length > 0 && (
             <>
-              <div className="ml-2 h-4 w-[1px] bg-border" />
-              <div className="ml-2 flex items-center justify-center rounded-sm bg-primary/10 px-1.5 py-0.5 text-xs font-medium text-primary">
+              <div className="ml-2 h-4 w-[1px] bg-border shrink-0" />
+              <div className="ml-2 flex items-center justify-center rounded-sm bg-primary/10 px-1.5 py-0.5 text-xs font-medium text-primary shrink-0">
                 {value.length}
               </div>
             </>
