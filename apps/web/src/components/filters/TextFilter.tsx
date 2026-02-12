@@ -8,7 +8,7 @@ interface TextFilterProps {
 
 export function TextFilter({ value, onChange }: TextFilterProps) {
   return (
-    <div className="relative w-full md:w-[240px]">
+    <div className="relative w-full md:w-[300px]">
       <label htmlFor="search" className="sr-only">
         Buscar aluno
       </label>
