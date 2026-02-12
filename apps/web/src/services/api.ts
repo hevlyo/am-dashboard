@@ -12,9 +12,6 @@ export const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  // Proteção CSRF: O backend exige este cabeçalho para validar a origem
-  config.headers['X-Requested-With'] = 'XMLHttpRequest';
-  
   if (accessToken) {
     config.headers.Authorization = `Bearer ${accessToken}`;
   }
