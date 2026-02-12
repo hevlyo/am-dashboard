@@ -34,7 +34,7 @@ export function MultiSelectFilter({ title, options, value, onChange }: MultiSele
     <Popover>
       <PopoverTrigger asChild>
         <Button variant="outline" className={cn(
-          "justify-start hover:text-foreground w-full overflow-hidden",
+          "justify-start hover:text-foreground overflow-hidden",
           value.length > 0 ? "text-foreground bg-accent/50" : "text-muted-foreground"
         )}>
           <Filter className="mr-2 h-4 w-4 shrink-0" />
