@@ -65,7 +65,7 @@ export function Dashboard() {
 
         <div className="bg-background/60 backdrop-blur-xl border rounded-2xl p-5 shadow-sm space-y-4">
           <div className="flex flex-col lg:flex-row gap-4 items-end lg:items-end">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:flex lg:flex-row gap-3 w-full lg:w-auto flex-1">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 w-full lg:flex-1 min-w-0">
               <TextFilter
                 value={filters.search || ""}
                 onChange={(val) => updateFilter("search", val)}
@@ -98,7 +98,7 @@ export function Dashboard() {
               />
             </div>
 
-            <div className="flex gap-2 w-full lg:w-auto">
+            <div className="flex gap-2 w-full lg:w-auto shrink-0">
               <Button
                 variant="outline"
                 onClick={clearFilters}

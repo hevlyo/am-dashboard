@@ -12,6 +12,8 @@ export const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
+  config.headers["X-Requested-With"] = "XMLHttpRequest";
+
   if (accessToken) {
     config.headers.Authorization = `Bearer ${accessToken}`;
   }
