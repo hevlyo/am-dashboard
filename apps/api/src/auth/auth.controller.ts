@@ -51,7 +51,8 @@ export class AuthController {
     res.cookie("refreshToken", tokens.refreshToken, {
       httpOnly: true,
       secure: isProduction,
-      sameSite: isProduction ? "none" : "strict", // 'none' required for cross-origin in production
+      sameSite: isProduction ? "none" : "lax",
+      path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
@@ -73,7 +74,8 @@ export class AuthController {
     res.cookie("refreshToken", tokens.refreshToken, {
       httpOnly: true,
       secure: isProduction,
-      sameSite: isProduction ? "none" : "strict",
+      sameSite: isProduction ? "none" : "lax",
+      path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
@@ -98,7 +100,8 @@ export class AuthController {
     res.cookie("refreshToken", tokens.refreshToken, {
       httpOnly: true,
       secure: isProduction,
-      sameSite: isProduction ? "none" : "strict",
+      sameSite: isProduction ? "none" : "lax",
+      path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
@@ -109,7 +112,7 @@ export class AuthController {
   @ApiOperation({ summary: "Logout do usuário" })
   @HttpCode(HttpStatus.OK)
   async logout(@Res({ passthrough: true }) res: Response) {
-    res.clearCookie("refreshToken");
+    res.clearCookie("refreshToken", { path: "/" });
     return { message: "Logged out successfully" };
   }
 
