@@ -64,8 +64,8 @@ export function Dashboard() {
         </div>
 
         <div className="bg-background/60 backdrop-blur-xl border rounded-2xl p-5 shadow-sm space-y-4">
-          <div className="flex flex-col lg:flex-row lg:flex-wrap lg:justify-center gap-3 items-end">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:flex lg:flex-row lg:flex-wrap gap-3 w-full lg:w-auto min-w-0">
+          <div className="flex flex-col lg:flex-row lg:items-end gap-3 w-full">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:flex lg:flex-row lg:flex-wrap gap-3 w-full lg:flex-1 min-w-0">
               <TextFilter
                 value={filters.search || ""}
                 onChange={(val) => updateFilter("search", val)}
